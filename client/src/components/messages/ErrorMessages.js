@@ -1,6 +1,7 @@
 import React from 'react';
 import {Message} from 'semantic-ui-react';
 
+
 const RegisterError = () =>(
     <Message 
         negative 
@@ -10,4 +11,13 @@ const RegisterError = () =>(
 
 )
 
-export default RegisterError;
+const LoginError = () =>(
+    <Message
+        negative
+        header = "Incorrect email or password."
+        content = "Try, again."
+    />
+)
+
+export {RegisterError,LoginError
+};

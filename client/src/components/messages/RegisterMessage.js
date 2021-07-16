@@ -1,6 +1,6 @@
 import React from 'react';
 import RegisterSuccess from '../messages/RegisterSuccess';
-import RegisterError from '../messages/RegisterError';
+import {RegisterError} from './ErrorMessages';
 
 const RegisterMessage = ({success})=>{
 

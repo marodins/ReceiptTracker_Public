@@ -7,7 +7,7 @@ class UploadForm extends React.Component{
         this.onChangeFile = this.onChangeFile.bind(this)
         this.state = {
             fileChosen:null,
-            loading:false
+            loggedIn:true,
         }
         
     }

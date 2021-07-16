@@ -5,6 +5,7 @@ import UploadForm from '../forms/UploadForm'
 
 
 const Upload = ()=>{
+    
     return(
         
         <div class = "ui container">

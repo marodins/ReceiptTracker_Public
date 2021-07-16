@@ -1,5 +1,8 @@
 import React from 'react';
 import axios from 'axios';
+import {Redirect,withRouter} from 'react-router-dom'
+import LoginFunc from '../messages/LoginMessage'
+import Authenticate_user from '../../auth/login_auth';
 
 
 
@@ -14,7 +17,7 @@ class LoginForm extends React.Component{
         this.state = {
             email:'',
             password:'',
-            loading:false
+            loggedIn:null,
         }
     }
 
@@ -30,40 +33,56 @@ class LoginForm extends React.Component{
             email: this.state.email,
             password: this.state.password
         }
-        axios.put('http://localhost:3131/login',containedHere)
-            .then(function(res){
-                console.log(res.data);
+        axios.post('http://localhost:3131/login',containedHere)
+            .then(res=>{
+                console.log(res);
+                if(res.data.authentication == "mismatch"){
+                    this.setState({loggedIn:false})
+                }
+                else if(res.data.authentication=="no-match"){
+                    this.setState({loggedIn:false})
+                }
+                else{
+                    Authenticate_user.login(()=>{
+                        this.props.history.push('/upload')
+                    })
+                }
+                
             })
-            .catch(function(error){
-                console.log(error);
+            .catch(error=>{
+                this.props.history.push('/');
             });
     };
-    
+
     render(){
         return(
-            <form  class = "ui large form" onSubmit = {this.getSubmit}>
-                <div class ="ui stacked segment">
-                    <div class = "field">
-                        <label>Email</label>
-                        <input onChange = {this.onChangeEmail} value = {this.state.email} type='email' id = 'email' name='email'></input>
+            <div>
+                <LoginFunc loggedIn={this.state.loggedIn}></LoginFunc>
+                <form  class = "ui large form" onSubmit = {this.getSubmit}>
+                    <div class ="ui stacked segment">
+                        <div class = "field">
+                            <label>Email</label>
+                            <input onChange = {this.onChangeEmail} value = {this.state.email} type='email' id = 'email' name='email'></input>
+                        </div>
+                        <div class = "field">
+                            <label>Password</label>
+                            <input 
+                                type = 'password'
+                                id = 'password'
+                                name = 'password'
+                                value = {this.state.password}
+                                onChange = {this.onChangePassword}
+                            >
+                        </input>
+                        </div>
+                        <button class = "ui fluid large teal submit button" type = "submit">Submit</button>
                     </div>
-                    <div class = "field">
-                        <label>Password</label>
-                        <input 
-                            type = 'password'
-                            id = 'password'
-                            name = 'password'
-                            value = {this.state.password}
-                            onChange = {this.onChangePassword}
-                        >
-                    </input>
-                    </div>
-                    <button class = "ui fluid large teal submit button" type = "submit">Submit</button>
-                </div>
-            </form>
+                </form>
+            </div>
+  
 
         )
     }
 }
 
-export default LoginForm;
+export default withRouter(LoginForm);

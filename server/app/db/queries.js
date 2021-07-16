@@ -15,13 +15,27 @@ const registerUser = (req,res,next)=>{
 };
 
 const loginUser = (req,res,next) =>{
-    const check_user = 'SELECT email,password from Users WHERE email = ?';
+    const check_user = 'SELECT email, password from users WHERE email = $1';
     const email = req.body.email;
-    pool.query(check_user,email,(err,result)=>{
+    const password = req.body.password;
+    pool.query(check_user,[email],(err,result)=>{
+        console.log('here is info sent',email,password)
+        console.log(result.rows.length)
         if (err){
             return next(err);
         }
-        return res.send({message:'User logged in'})
+        if(result.rows.length > 0){
+            if (result.rows[0].password === password){
+                req.session.email = email
+                return res.send({authentication:"user-authenticated"})
+            }
+            else{
+                return res.send({authentication:"mismatch"})
+            }
+        }
+        else{
+            return res.send({authentication:"no-match"})
+        }
     });
 
 

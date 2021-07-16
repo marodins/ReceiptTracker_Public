@@ -29,13 +29,11 @@ class RegisterForm extends React.Component{
         var dataSend = {email:this.state.email, password:this.state.password};
         axios.post('http://localhost:3131/register',dataSend)
             .then((res)=>{
-                console.log('ok in then',res.data.message);
                 this.setState({success:true});
 
             })
             .catch((error)=>{
                 this.setState({success:false});
-                console.log(error)
             });
     };
     render(){
