@@ -1,4 +1,5 @@
 
+const jwt = require('jsonwebtoken');
 var pool = require('./connection.js');
 
 
@@ -19,15 +20,20 @@ const loginUser = (req,res,next) =>{
     const email = req.body.email;
     const password = req.body.password;
     pool.query(check_user,[email],(err,result)=>{
-        console.log('here is info sent',email,password)
-        console.log(result.rows.length)
+        console.log('here is info sent',email,password);
+        console.log(result);
         if (err){
             return next(err);
         }
         if(result.rows.length > 0){
+            var token = jwt.sign({email},'appleCarrot',{
+                expiresIn:30000000
+            })
             if (result.rows[0].password === password){
-                req.session.email = email
-                return res.send({authentication:"user-authenticated"})
+                req.session.email = email;
+                console.log(req.headers);
+                res.cookie('token',token,{httpOnly:true});
+                res.send({authentication:"user-authenticated", user:email,token:token})
             }
             else{
                 return res.send({authentication:"mismatch"})

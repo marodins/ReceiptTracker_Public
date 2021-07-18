@@ -7,11 +7,6 @@ var {loginUser} = require('../db/queries.js')
 router.use(bodyParser.urlencoded({extended:false}));
 router.use(bodyParser.json());
 
-var cors = require('cors');
-router.use(cors());
-
-
-
 
 router.post('/',loginUser);
 

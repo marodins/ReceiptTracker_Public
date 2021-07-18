@@ -33,19 +33,20 @@ class LoginForm extends React.Component{
             email: this.state.email,
             password: this.state.password
         }
-        axios.post('http://localhost:3131/login',containedHere)
+        axios.post('http://localhost:3131/login',containedHere,{withCredentials:true})
             .then(res=>{
                 console.log(res);
-                if(res.data.authentication == "mismatch"){
+                if(res.data.authentication === "mismatch"){
                     this.setState({loggedIn:false})
                 }
-                else if(res.data.authentication=="no-match"){
+                else if(res.data.authentication==="no-match"){
                     this.setState({loggedIn:false})
                 }
                 else{
-                    Authenticate_user.login(()=>{
+
+                    Authenticate_user.login(res.data.user,res.data.token,()=>{
                         this.props.history.push('/upload')
-                    })
+                    });
                 }
                 
             })

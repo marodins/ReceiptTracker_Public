@@ -20,10 +20,12 @@ class UploadForm extends React.Component{
         formFile.append('avatar',this.state.fileChosen);
         
         const headers = {
-            headers:{'content-type':'multipart/form-data'}
+            headers:{'content-type':'multipart/form-data'},
+            Authorization:this.props.token,
+            withCredentials:true
         }
     
-        axios.post('http://localhost:9696/upload',formFile,headers)
+        axios.post('http://localhost:3131/upload',formFile,headers)
 
         .then(function(res){
             console.log(res.data);

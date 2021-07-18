@@ -1,11 +1,17 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import LoginForm from '../forms/LoginForm'
+import LoginForm from '../forms/LoginForm';
+import Authenticate_user from '../../auth/login_auth';
 
 
 
-const Login = () =>{
-    return(
+class Login extends React.Component {
+    constructor(props){
+        super(props);
+
+    }
+    render(){
+        return(
         <div class = "ui container">
             <div class = "ui middle aligned center aligned grid">
                 <div class = "column">
@@ -18,10 +24,9 @@ const Login = () =>{
                 </div>
             </div>
         </div>
+    )    
+    }
 
-
-
-    )
 }
 
 export default Login;
