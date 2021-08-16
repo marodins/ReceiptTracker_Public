@@ -6,7 +6,7 @@ var express = require('express')
     check_login = require('./routes/check_login.js')
     check_token = require('./auth/check_token.js')
     log_out = require('./routes/log_out.js');
-
+    submit_receipt = require('./routes/submit_receipt.js')
 
 var app = express();
 var cors = require('cors');
@@ -47,6 +47,9 @@ app.use('/register',register_user);
 app.use('/logout',log_out);
 app.use('/login',log_in);
 app.use('/check_login',check_login);
+app.use('/submit_receipt',submit_receipt)
+
+
 
 
 app.use(function(err,req,res,next){
