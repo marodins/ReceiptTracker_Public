@@ -7,6 +7,7 @@ import Register from "./components/pages/Register";
 import PrivateRoute from "./components/private_routes/_check_login";
 import PublicRoute from "./components/public_routes/logged_in_check";
 import Authenticate_user from "./auth/login_auth";
+import Account from "./components/pages/Account";
 
 class App extends React.Component{
   constructor(props){
@@ -30,9 +31,10 @@ class App extends React.Component{
     return(
       <Switch>
         <PublicRoute path="/" exact component = {Login}/>
+        <PrivateRoute path ="/account" exact component = {Account}/>
         <PrivateRoute path="/upload" exact component = {Upload}/>
         <PrivateRoute path="/receipts" exact component = {Receipts}/>
-        <Route path="/register" exact component = {Register}/>
+        <PublicRoute path="/register" exact component = {Register}/>
       </Switch>       
     )
   }

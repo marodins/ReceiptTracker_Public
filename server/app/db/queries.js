@@ -1,6 +1,5 @@
 
 const jwt = require('jsonwebtoken');
-const { all } = require('../routes/log_out.js');
 var pool = require('./connection.js');
 var format = require('pg-format')
 
@@ -12,8 +11,7 @@ const registerUser = (req,res,next)=>{
         if(error){
             return next(error);
         }
-        return res.send({message:'User registered'});
-
+        next();
     })
 };
 
@@ -100,8 +98,10 @@ const uploadReceipt = (req,res,next)=>{
 };
 
 const getReceipts = (req,res,next)=>{
+    console.log('getttting')
     var email = req.session.email
-    var quantity = req.body.quantity
+    var quantity = req.query.quantity
+    //var quantity = req.params.quantity
     const getInfo =   `SELECT * FROM
                     (SELECT receipt_id as receipt_id_1
                     FROM receipts
@@ -115,18 +115,200 @@ const getReceipts = (req,res,next)=>{
                     ON q1.receipt_id_1 = q2.receipt_id;`
     
     pool.query(getInfo,[email,quantity],(err,results)=>{
+        if(err){
+            console.log('errrrororrr')
+            return next(err)
+        }
+        res.locals.query_results = results.rows
+        next()
+    })
+}
 
+const specific_receipt = (req,res,next)=>{
+    /** queries database for specific receipt  */
+
+    var specific_id = req.query.specific
+    var email = req.session.email
+    console.log('specific id',specific_id)
+    const getReceipt = `SELECT * FROM
+                        (SELECT receipt_id as receipt_id_1
+                        FROM receipts
+                        WHERE fk_user_receipt = (SELECT user_id from users WHERE email = $1)
+                        AND receipt_id = $2) q1
+                        LEFT JOIN
+                        (SELECT store, receipt_date, item_name,item_price,item_id, receipt_id
+                        FROM receipts
+                        INNER JOIN items on receipts.receipt_id = items.fk_item_receipt)q2
+                        
+                        ON q2.receipt_id = q1.receipt_id_1;`
+
+    pool.query(getReceipt,[email,specific_id],(err,results)=>{
+        if(err){
+            return next(err)
+        }
+        console.log(results)
+        res.locals.query_results = results.rows
+        next()
+    })
+    
+
+
+}
+
+const deleteReceipt = (req,res,next) =>{
+    
+    var receipt_id = req.query.receipt_id
+    console.log(req.body.receipt_id)
+
+    const delete_receipt = `DELETE FROM receipts WHERE receipt_id = $1`
+    pool.query(delete_receipt, [receipt_id],(err,results)=>{
         if(err){
             next(err)
         }
-        req.data.query_results = results.rows
         next()
     })
+
+}
+
+const changePass = (req,res,next) =>{
+    var old = req.body.old
+    var new_pass = req.body.new
+    var email = req.session.email
+    console.log('this is the email',email)
+    const changePass = `SELECT password FROM users WHERE email = $1`
+    const updatePass = `UPDATE users SET password = $1 WHERE email = $2 `
+    pool.query(changePass,[email],(err,results)=>{
+        if(err){
+            next(err)
+        }
+        console.log('here are the results for password change',results)
+        if(results.rows[0].password !== old){
+            console.log('does not match')
+            res.send({message:"password-no-match"})
+            res.end()
+        }
+        else{
+            pool.query(updatePass,[new_pass,email],(err)=>{
+                if (err){
+                    next(err)
+                }
+                else{
+                    next()
+                }
+            })
+        }
+    })
+}
+const changeEmail = (req,res,next) =>{
+    var newEmail = req.body.new
+
+    var oldEmail = req.session.email
+    const changeEmail = `UPDATE users SET email = $1 WHERE email = $2`
+    const checkIf = `SELECT email FROM users WHERE email = $1`
+    pool.query(checkIf,[newEmail],(err,results)=>{
+        if (err){
+            next(err)
+        }
+        if(results.rows[0]){
+            console.log('email already in db')
+            res.send({message:'email-in-use'})
+            res.end()
+        }else{
+            pool.query(changeEmail, [newEmail,oldEmail],(err,result)=>{
+                if(err){
+                    next(err)
+                }
+                next()
+            })
+        }
+    })
+
+
+}
+
+const deleteAccount = (req,res,next) =>{
+    var email = req.session.email
+    const deleteAcc = `DELETE FROM users WHERE email = $1`
+    pool.query(deleteAcc,[email],(err,result)=>{
+        if(err){
+            next(err)
+        }
+        next()
+    })
+}
+const searchReceipts = (req,res,next)=>{
+    var input = req.query.value
+    var email = req.session.email
+
+
+    console.log('input',input)
+    const search = `SELECT receipt_id AS price, store AS title, receipt_date AS description
+                    FROM receipts
+                    WHERE LOWER(receipts.store) LIKE $1 || '%'
+                    AND fk_user_receipt = (SELECT user_id FROM users WHERE email = $2)`
+
+    pool.query(search,[input, email],(err,results)=>{
+        if(err){
+            console.log('got error search',)
+            return next(err)
+        }
+        console.log('no error',results)
+        res.locals.query_results = results
+        next()
+    })
+}
+
+var updateReceipt = (req,res,next)=>{
+    //get store name req.body
+    var rid = req.body.receipt_id
+    var store = req.body.store
+    var items = req.body.items
+
+
+    //get receipt date
+    var date = req.body.date
+
+    console.log(store,date,items)
+    //delete current items of that rid
+    const updateRec =  `UPDATE receipts 
+                        SET store = $1, receipt_date = $2
+                        WHERE receipt_id = $3`
+    const deleteCurrentItems =`DELETE FROM items WHERE fk_item_receipt = $1`
+    //add every single item: price: as new items for that recipt id
+    const addItems = `INSERT INTO items (item_name,item_price,fk_item_receipt) VALUES %L`
+
+    pool.query(updateRec,[store,date,rid],(err)=>{
+        if(err){
+            next(err)
+        }
+        pool.query(deleteCurrentItems,[rid],(err)=>{
+            if(err){
+                next(err)
+            }
+            pool.query(format(addItems,items),[],(err)=>{
+                if(err){
+                    next(err)
+                }
+                next()
+            })
+        })
+
+    })
+
+
+
 }
 
 module.exports = {
     registerUser:registerUser,
     loginUser:loginUser,
     uploadReceipt:uploadReceipt,
-    getReceipts:getReceipts
+    getReceipts:getReceipts,
+    deleteReceipt:deleteReceipt,
+    changePass : changePass,
+    changeEmail : changeEmail,
+    deleteAccount:deleteAccount,
+    searchReceipts:searchReceipts,
+    updateReceipt:updateReceipt,
+    specific_receipt:specific_receipt
 }

@@ -84,5 +84,5 @@ router.post('/',check_token,checkFolder,fileUpload.single('avatar'),runTes,(req,
 })
 
 
- module.exports = router;
+ module.exports = router
 

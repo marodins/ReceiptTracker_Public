@@ -3,6 +3,8 @@ import NavBar from '../nav/navBar'
 import UploadForm from '../forms/UploadForm'
 import LoadData from '../tables/LoadData'
 import Authenticate_user from '../../auth/login_auth'
+import {UploadMessages} from '../messages/UploadMessages'
+import {Popup,Button, PopupContent, Segment,Container} from 'semantic-ui-react'
 
 
 
@@ -10,13 +12,16 @@ class Upload extends React.Component{
     constructor(props){
         super(props)
         this.handleData = this.handleData.bind(this)
+        this.handleCompletion = this.handleCompletion.bind(this)
         this.state = {
             data:{
                 email:'',
                 items:{},
                 store:'',
                 date:''
-            }
+            },
+            exists:null,
+            completion:''
         }
     }
     handleData = ({email,items,store,date}) =>{
@@ -30,21 +35,50 @@ class Upload extends React.Component{
                         items: items? items: prevState.data.items,
                         store: store? store : prevState.data.store,
                         date : date? date: prevState.data.date
-                    }
+                    },
+                    exists:true
                         
                 }
             )
         )
     }
+
+    handleCompletion = (error) =>{
+        console.log('handling completion')
+        if(error){
+           return this.setState({completion:"INCOMPLETE"}) 
+        }
+        this.setState({completion:"COMPLETED"})
+    }
+
     render(){
         console.log('checking auth in upload',Authenticate_user.isAuth())
         console.log(this.state,'state of the upload page')
         return(
             <div class = "ui container">
                 <NavBar />
+                <UploadMessages completion = {this.state.completion}/>
                 <h1> Upload Receipt </h1>
-                <UploadForm handleData = {this.handleData}/>
-                <LoadData handleData = {this.handleData} data = {this.state.data}/>
+                <Container textAlign="right">
+                    <Popup trigger = {<Button icon="question"></Button>}>
+                        <PopupContent>
+                            <Segment basic padded>
+                                + click cell to edit data <br/>
+                                + save data
+                            </Segment>
+
+                        </PopupContent>
+                    </Popup>                        
+                </Container>
+                
+
+                <Segment>
+                  <UploadForm handleData = {this.handleData}/>  
+                </Segment>
+                <Segment padded="very">
+                    {this.state.exists?<LoadData handleData = {this.handleData} data = {this.state.data} setComplete = {this.handleCompletion}/>:null}   
+                </Segment>
+                
             </div>
         
         )

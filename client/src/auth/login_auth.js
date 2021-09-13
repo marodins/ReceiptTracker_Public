@@ -19,9 +19,9 @@ class Authenticate_user{
     logout(callback){
         this.authenticated=false
         console.log('the current user',this.user);
-        axios.post('http://localhost:3131/logout',this.user,{withCredentials:true})
+        axios.post('/logout',this.user,{withCredentials:true})
             .then(res=>{
-                this.user =null;
+                this.user=null;
                 this.token=null;
                 callback();
             })

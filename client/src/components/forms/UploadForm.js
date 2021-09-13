@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Button,Form, ItemDescription} from 'semantic-ui-react'
+import {Button,Form, Header,Container, Segment, Icon} from 'semantic-ui-react'
 
 
 
@@ -16,7 +16,8 @@ class UploadForm extends React.Component{
             cell:{
                 row:'',
                 name:''
-            }
+            },
+            fileName:null
         }
         
     }
@@ -46,25 +47,45 @@ class UploadForm extends React.Component{
     
         axios.post('http://localhost:3131/upload',formFile,headers)
 
-        .then(res=>{
-            console.log(res.data);
-            this.onChangeLoader(false,res.data.data)
-        })
-        .catch(error=>{
-            console.log(error);
-        });
+            .then(res=>{
+                console.log(res.data);
+                this.onChangeLoader(false,res.data.data)
+            })
+            .catch(error=>{
+                console.log(error);
+            
+            });
+
+    }
+    selectFile = (e)=>{
+        console.log(e.target.files)
+        this.setState({fileName:''})
+        e.target.nextSibling.click()
 
     }
     render(){
         return(
-            <div id ="upload_page">
-                <div class = "ui large form">
+            <Container textAlign="center">
+                <Segment basic>
+                    <Header icon>
+                        <Icon name = "file image outline"/>
+                    </Header>
                     <Form id = "upload-form" loading ={this.state.loading}>
-                        <Form.Input id = "fileUpload" onChange = {this.onChangeFile} type = "file" name = "receipt"></Form.Input>
+                        <Form.Field>
+                            <label>
+                               {this.state.fileChosen?this.state.fileChosen.name:null} 
+                            </label>
+                            
+                            <Button onClick={this.selectFile}>Select File</Button>
+                            
+                            <input id = "fileUpload" onChange = {this.onChangeFile} type = "file" name = "receipt" hidden/>  
+                        </Form.Field>
+                        
                         <Button size='medium' color ="blue" type ="submit" onClick = {this.onSubmitFile}>Upload</Button>
                     </Form>
-                </div>
-            </div>
+                </Segment>                
+            </Container>
+
 
 
         )

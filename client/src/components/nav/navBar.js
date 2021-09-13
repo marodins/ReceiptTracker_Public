@@ -9,7 +9,7 @@ import {withRouter} from 'react-router-dom';
 const NavBar = props =>{
     return(
         <div class = "ui four item menu">
-            <Link class = "item" to="/">Home</Link>
+            <Link class = "item" to="/account">Account</Link>
             <Link class = "item" to="/upload">Upload</Link>
             <Link class = "item" to="/receipts">Receipts</Link>
             <Link class = "item" onClick={()=>{Authenticate_user.logout(()=>

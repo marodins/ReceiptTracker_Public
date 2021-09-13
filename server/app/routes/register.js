@@ -5,15 +5,12 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({extended:false}));
 router.use(bodyParser.json());
 
-
-var cors = require('cors');
 var {registerUser} = require('../db/queries.js')
 
 
-router.use(cors());
-
-
-router.post('/',registerUser);
+router.post('/',registerUser,(req,res,next)=>{
+    res.send({message:'User registered'});
+});
 
 
 module.exports = router

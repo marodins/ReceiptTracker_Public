@@ -3,6 +3,7 @@ import {Table,Input,Button} from 'semantic-ui-react'
 import axios from 'axios'
 
 
+
 class LoadData extends React.Component{
     //data.data.items[0] ... [1]...
     constructor(props){
@@ -16,7 +17,8 @@ class LoadData extends React.Component{
             cell:{
                 row:'',
                 name:''
-            }
+            },
+            loading:false
         }
     }
     onChangeCell = (e) =>{
@@ -43,6 +45,7 @@ class LoadData extends React.Component{
     }
 
     saveReceipt = () =>{
+        this.setState({loading:true});
         //make axios req
         var all_data = this.props.data
         var headers = {
@@ -51,10 +54,15 @@ class LoadData extends React.Component{
         axios.post('http://localhost:3131/submit_receipt',all_data,headers)
         .then(res=>{
             console.log(res)
-            this.props.history.push('/upload')
+            this.setState({loading:false},()=>{
+                //no error--false
+                this.props.setComplete(false)
+            })
+            //this.props.history.push('/upload')
         })
         .catch(error=>{
             console.log(error)
+            this.props.setComplete(true)
         })
 
     }
@@ -105,12 +113,13 @@ class LoadData extends React.Component{
         const items_obj = this.props.data.items;
         return(
             <div>
-                <Button floated ='right' color='green'onClick={this.saveReceipt}>Save Receipt</Button>
+                <Button floated ='right' color='green'onClick={this.saveReceipt} basic loading = {this.state.loading}>Save Receipt</Button>
                 <Table onKeyDown = {this.handleEnter}>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Date</Table.HeaderCell>
                             <Table.HeaderCell>Store</Table.HeaderCell>
+                            <Table.HeaderCell></Table.HeaderCell>
                         </Table.Row>
                         <Table.Row onClick = {this.onChangeCell} id = 'initial'>
                         {this.state.cell.name == 'date'?
@@ -123,6 +132,7 @@ class LoadData extends React.Component{
                         <Table.Row>
                             <Table.HeaderCell>Item</Table.HeaderCell>
                             <Table.HeaderCell>Price</Table.HeaderCell>
+                            <Table.HeaderCell></Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>

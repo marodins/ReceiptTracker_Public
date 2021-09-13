@@ -19,5 +19,41 @@ const LoginError = () =>(
     />
 )
 
-export {RegisterError,LoginError
-};
+const ConfirmPassError =()=>(
+    <Message 
+        negative
+        header ="New password and confirm password don't match"
+        content ="Try again"
+    />
+
+)
+const OldPassError =()=>(
+    <Message 
+        negative
+        header ="Old password is incorrect"
+        content ="Try again"
+    />
+
+)
+const ConfirmEmailError =()=>(
+    <Message 
+        negative
+        header ="Emails don't match"
+        content ="Try again"
+    />
+
+)
+const EmailExists =()=>(
+    <Message
+        negative
+        header = "Email already exists"
+        content = "try different email"/>
+)
+
+const ReceiptUpdateUnsuccessful = ()=>(
+    <Message
+        negative
+        header="something went wrong with the update, please try again"/>
+)
+
+export {RegisterError,LoginError,ConfirmPassError,OldPassError, ConfirmEmailError,EmailExists,ReceiptUpdateUnsuccessful};
