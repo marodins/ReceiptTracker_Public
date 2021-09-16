@@ -1,4 +1,6 @@
 
+// instance to track each users' authorization status for rerouting purposes
+
 import axios from 'axios';
 
 class Authenticate_user{
@@ -18,7 +20,6 @@ class Authenticate_user{
 
     logout(callback){
         this.authenticated=false
-        console.log('the current user',this.user);
         axios.post('/logout',this.user,{withCredentials:true})
             .then(res=>{
                 this.user=null;

@@ -8,7 +8,6 @@ class RegisterForm extends React.Component{
         super(props);
         this.onChangeEmail= this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
-        this.getSubmit = this.getSubmit.bind(this);
 
         this.state = {
             email:'',
@@ -24,13 +23,14 @@ class RegisterForm extends React.Component{
     onChangePassword = e =>{
         this.setState({password:e.target.value})
     }
-    getSubmit(e){
+    getSubmit=(e)=>{
+        // submit user input to server for registration
         e.preventDefault();
         var dataSend = {email:this.state.email, password:this.state.password};
         axios.post('http://localhost:3131/register',dataSend)
+
             .then((res)=>{
                 this.setState({success:true});
-
             })
             .catch((error)=>{
                 this.setState({success:false});

@@ -1,3 +1,5 @@
+// Various error messages
+
 import React from 'react';
 import {Message} from 'semantic-ui-react';
 
@@ -10,7 +12,24 @@ const RegisterError = () =>(
     />
 
 )
-
+const DeleteAccountError = () =>(
+    <Message
+        negative
+        header = "Unable to delete account, something went wrong please try again."
+        />
+)
+const EmailChangeError = () =>(
+    <Message
+        negative
+        header = "Unable to change email, something went wrong, please try again."
+        />
+)
+const PassChangeError = () =>(
+    <Message
+        negative
+        header = "Unable to change password, something went wrong, please try again."
+        />
+)
 const LoginError = () =>(
     <Message
         negative
@@ -56,4 +75,14 @@ const ReceiptUpdateUnsuccessful = ()=>(
         header="something went wrong with the update, please try again"/>
 )
 
-export {RegisterError,LoginError,ConfirmPassError,OldPassError, ConfirmEmailError,EmailExists,ReceiptUpdateUnsuccessful};
+export {
+        RegisterError,
+        LoginError,
+        ConfirmPassError,
+        OldPassError, 
+        ConfirmEmailError,
+        EmailExists,
+        ReceiptUpdateUnsuccessful,
+        DeleteAccountError,
+        EmailChangeError,
+        PassChangeError};

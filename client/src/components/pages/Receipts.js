@@ -7,7 +7,7 @@ import SearchReceipts from '../search/SearchReceipts'
 import { ReceiptUpdateSuccess } from '../messages/SuccessMessages'
 import {ReceiptUpdateUnsuccessful} from '../messages/ErrorMessages'
 
-import {Item,Card,Segment} from 'semantic-ui-react'
+import {Card,Segment} from 'semantic-ui-react'
 
 
 class Receipts extends React.Component{
@@ -28,27 +28,24 @@ class Receipts extends React.Component{
     }
     //make axios request to get all past 50? receipts
     getAll = (specific) => {
-        console.log('getall',specific)
+        
         var headers = {
             withCredentials:true
         }
         var params;
         if(specific){
             params = {params:{specific:specific}}
-            console.log('here')
+            
         }else{
-            console.log('here2')
             params = {params:{quantity:10}}
         }
         axios.get('/receipts',params,headers)
             .then(res=>{
-                console.log('data received from client side',res.data)
                 var {data} = res.data
-                console.log('this is the ob',data)
                 this.createDataObject(data,specific)
             })
             .catch(err=>{
-                console.log('error----',err)
+                return this.setState({success:false})
             })
     }
     createDataObject = (data,sp) =>{
@@ -56,7 +53,6 @@ class Receipts extends React.Component{
 
         Object.keys(data).forEach((key)=>{
             var check_id = data[key].receipt_id
-            console.log('id',check_id)
             if(!(check_id in dataObj)){
                 dataObj[check_id] = {
                     store: data[key].store,
@@ -73,7 +69,6 @@ class Receipts extends React.Component{
         
         this.setState((prev)=>{
             if(sp){
-                console.log('sppp',sp)
                 return {...prev,data:dataObj,selected:sp}
             }
             return {...prev,data:dataObj,selected:''}
@@ -84,9 +79,6 @@ class Receipts extends React.Component{
     componentDidMount(){
         this.getAll()
     }
-    //axios allow filter option for more?
-    //axios search/filter by store
-    //axios sum for month/year
 
     setMessage = (m)=>{
         if(m === "success"){
@@ -98,7 +90,6 @@ class Receipts extends React.Component{
         this.setState({success:null})
     }
     setModal = (id)=>{
-        console.log('id for modal',id)
         if(!(this.state.data[id]) && id!==''){
             return this.getAll(id)
         }
@@ -106,7 +97,6 @@ class Receipts extends React.Component{
     }
 
     render(){
-        console.log('updated')
         if(this.state.data==null){
             return (<div class = "ui container">
                         <NavBar />

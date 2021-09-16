@@ -1,3 +1,6 @@
+
+// Upload form for image file
+
 import React from 'react';
 import axios from 'axios';
 import {Button,Form, Header,Container, Segment, Icon} from 'semantic-ui-react'
@@ -44,21 +47,21 @@ class UploadForm extends React.Component{
             withCredentials:true
         }
         this.onChangeLoader(true,null);
-    
+
+        // submit image file to server for processing
         axios.post('http://localhost:3131/upload',formFile,headers)
 
             .then(res=>{
-                console.log(res.data);
                 this.onChangeLoader(false,res.data.data)
             })
             .catch(error=>{
-                console.log(error);
+
+                return this.props.handleCompletion('INCOMPLETE')
             
             });
 
     }
     selectFile = (e)=>{
-        console.log(e.target.files)
         this.setState({fileName:''})
         e.target.nextSibling.click()
 

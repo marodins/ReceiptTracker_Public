@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {Redirect,withRouter} from 'react-router-dom'
-import LoginFunc from '../messages/LoginMessage'
+import {LoginError} from '../messages/ErrorMessages'
 import Authenticate_user from '../../auth/login_auth';
 
 
@@ -27,15 +27,15 @@ class LoginForm extends React.Component{
     onChangePassword = e =>{
         this.setState({password:e.target.value})
     }
-    getSubmit(e){
+    getSubmit=(e)=>{
         e.preventDefault();
         var containedHere = {
             email: this.state.email,
             password: this.state.password
         }
+        // request to authorize user
         axios.post('http://localhost:3131/login',containedHere,{withCredentials:true})
             .then(res=>{
-                console.log(res);
                 if(res.data.authentication === "mismatch"){
                     this.setState({loggedIn:false})
                 }
@@ -43,7 +43,7 @@ class LoginForm extends React.Component{
                     this.setState({loggedIn:false})
                 }
                 else{
-
+                    // take user to upload page
                     Authenticate_user.login(res.data.user,res.data.token,()=>{
                         this.props.history.push('/upload')
                     });
@@ -58,7 +58,7 @@ class LoginForm extends React.Component{
     render(){
         return(
             <div>
-                <LoginFunc loggedIn={this.state.loggedIn}></LoginFunc>
+                {this.state.loggedIn===false?<LoginError/>:null}
                 <form  class = "ui large form" onSubmit = {this.getSubmit}>
                     <div class ="ui stacked segment">
                         <div class = "field">

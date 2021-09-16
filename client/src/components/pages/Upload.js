@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '../nav/navBar'
+import NavBar from '../nav/NavBar'
 import UploadForm from '../forms/UploadForm'
 import LoadData from '../tables/LoadData'
 import Authenticate_user from '../../auth/login_auth'
@@ -25,7 +25,6 @@ class Upload extends React.Component{
         }
     }
     handleData = ({email,items,store,date}) =>{
-        console.log('hereeeeeeeee')
 
         this.setState(prevState=>(
                 {
@@ -44,7 +43,6 @@ class Upload extends React.Component{
     }
 
     handleCompletion = (error) =>{
-        console.log('handling completion')
         if(error){
            return this.setState({completion:"INCOMPLETE"}) 
         }
@@ -52,8 +50,6 @@ class Upload extends React.Component{
     }
 
     render(){
-        console.log('checking auth in upload',Authenticate_user.isAuth())
-        console.log(this.state,'state of the upload page')
         return(
             <div class = "ui container">
                 <NavBar />
@@ -73,7 +69,7 @@ class Upload extends React.Component{
                 
 
                 <Segment>
-                  <UploadForm handleData = {this.handleData}/>  
+                  <UploadForm handleData = {this.handleData} handleCompletion = {this.handleCompletion}/>  
                 </Segment>
                 <Segment padded="very">
                     {this.state.exists?<LoadData handleData = {this.handleData} data = {this.state.data} setComplete = {this.handleCompletion}/>:null}   

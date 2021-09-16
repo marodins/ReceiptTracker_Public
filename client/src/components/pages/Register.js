@@ -1,22 +1,29 @@
 import React from 'react';
+import { Redirect } from 'react-router';
+import {Link} from 'react-router-dom'
+import { Segment,Container, Button} from 'semantic-ui-react';
 import RegisterForm from '../forms/RegisterForm'
 
 
 
-const Register = ()=>{
-    return(
-        <div class = "ui container">
-            <div class = "ui middle aligned center aligned grid">
-                <div class = "column">
-                    <h1> Register </h1>
-                </div>
-                <RegisterForm />
-            </div>
-        </div>
+class Register extends React.Component{
 
+    render(){
+        return(
+            <Segment compact>
+                <Segment basic>
+                    <Button floated = "right" onClick={()=>{
+                        this.props.history.push('/')
+                    }}>Back</Button>
+                </Segment>
+                <Segment basic>
+                    <RegisterForm/>
+                </Segment>
+            </Segment>
 
+        ) 
+    }
 
-    )
 }
 
 export default Register;
