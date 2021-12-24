@@ -1,14 +1,15 @@
+// checks jwt token -- authentication
 
 const jwt = require('jsonwebtoken');
 
 
 const check_token = (req,res,next)=>{
     var token = req.cookies.token;
-    console.log('token received',token)
-
+    
+    // if token exists
     if(token){
+        // decrypt using key
         jwt.verify(token,'appleCarrot',function(err,decoded){
-            console.log('the token',decoded);
             if(err){
                 next(err);
             }

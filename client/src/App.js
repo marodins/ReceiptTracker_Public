@@ -27,7 +27,6 @@ class App extends React.Component{
   }
 
   render(){
-    console.log('current user from main App',this.state.user)
     return(
       <Switch>
         <PublicRoute path="/" exact component = {Login}/>

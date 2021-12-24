@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '../nav/navBar';
+import NavBar from '../nav/NavBar';
 import Authenticate_user from '../../auth/login_auth';
 import axios from 'axios';
 import LoadReceipts from '../tables/LoadReceipts'

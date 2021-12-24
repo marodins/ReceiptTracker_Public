@@ -1,3 +1,5 @@
+
+
 var express = require('express')
     upload_receipt = require('./routes/upload_route.js')
     view_receipts = require('./routes/view_receipts.js')
@@ -9,7 +11,12 @@ var express = require('express')
     submit_receipt = require('./routes/submit_receipt.js')
     change = require('./routes/change.js')
 
+
+
 var app = express();
+
+const dotenv = require('dotenv').config({path:'../.env'});
+
 var cors = require('cors');
 
 var session = require('express-session');
@@ -20,32 +27,38 @@ var jwt = require('express-jwt');
 
 var path = require('path');
 
-
 app.use(cors({
-    origin:"http://localhost:3000",
+    origin:process.env.ORIGIN_URL,
     credentials:true
 }));
 
 app.use(cookieParser());
 
 
-app.use(session({
-    secret:"axxsv!a",
-    resave: false,
+var sess = {
+    secret:process.env.SESS_SECRET,
+    resave:false,
     saveUninitialized:false,
-    cookie:{secure:false}
-}));
+    cookie:{
+        secure:false
+    }
+}
+/*
+app.use(function(req,res,next){
+    if (app.get('env')==='production'){
+        
+        app.set('trust proxy',1)
+        sess.cookie.secure = true
+    }
+    next()
+})*/
+
+app.use(session(sess));
 
 app.use(bodyParser.urlencoded({extended:false}));
 
 app.use(bodyParser.json());
-/*
-app.use(function(req,res,next){
-    res.header('Access-Control-Allow-Origin',"http://localhost:3000");
-    res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept');
-    next()
-});
-*/
+
 app.use('/upload',upload_receipt)
 app.use('/register',register_user)
 app.use('/logout',log_out)
@@ -58,7 +71,6 @@ app.use('/change',change)
 
 
 app.use(function(err,req,res,next){
-    
     if(res.statusCode >= 400){
         return res.send('server error')
     }

@@ -1,3 +1,5 @@
+// Analyzes the data returned by Tesseract for the receipt
+// Class Receipt used to create instance of the analyzed receipt
 
 class Receipt{
     constructor(text,req,res){
@@ -11,10 +13,10 @@ class Receipt{
         this.text = text
         this.req = req
         this.res = res
-        //this.id
     }
 
     setAll = async function(){
+        // runs methods and sets items, store, date
         await this.createParsed()
         await Promise.all([this.setItems(),this.setStore(),this.setDate()])
     }
@@ -36,11 +38,9 @@ class Receipt{
 
     setItems = () =>{
         return Promise.resolve().then(()=>{
-            console.log('in items')
             var allItems = {};
             var arr = this.fullReceipt.parsed
             var x = 0;
-            console.log('in the set ite')
             const findItem = (start)=>{
                 var item = ''
                 var i = 1;
@@ -48,12 +48,10 @@ class Receipt{
                     item+= arr[start-i] + '_';
                     i++;
                 }
-                console.log('this is the final item',item.trim())
                 return item.trim().replace(/[:|]/g,'')
             }
             
             for(var item of arr){
-                console.log(item)
                 if(item.includes('.') && isNaN(parseInt(item)) === false){
                     var cost = item;
                     var gotItem = findItem(arr.indexOf(item));
@@ -68,11 +66,9 @@ class Receipt{
     }
     setStore = () =>{
         return Promise.resolve().then(()=>{
-                console.log('in store')
                 var string = ''
                 var i = 0;
                 var arr = this.fullReceipt.parsed
-                console.log(arr[i])
                 while(arr[i]===arr[i].toUpperCase() && isNaN(parseInt(arr[i]))===true){
                     string += arr[i]+' '
                     i++
@@ -85,7 +81,6 @@ class Receipt{
 
     createParsed = () =>{
         return new Promise((resolve)=>{
-            console.log('abt to parse')
             var i = 0;
             var stringArr = []
             var string = ''

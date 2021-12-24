@@ -1,3 +1,4 @@
+// all db query methods
 
 const jwt = require('jsonwebtoken');
 var pool = require('./connection.js');
@@ -19,6 +20,7 @@ const loginUser = (req,res,next) =>{
     const check_user = 'SELECT email, password from users WHERE email = $1';
     const email = req.body.email;
     const password = req.body.password;
+    
     pool.query(check_user,[email],(err,result)=>{
         console.log('here is info sent',email,password);
         console.log(result);
@@ -48,28 +50,19 @@ const loginUser = (req,res,next) =>{
 
 
 const uploadReceipt = (req,res,next)=>{
-    console.log('this is the req thats sent from client on receipt upload',req.body)
     //creating the receipt with some data {store,date,email} = object
     var receipt_data = [req.body.store,req.body.date,req.body.email]
     //all [['banana',12,'account1@yahoo.com'],[...]]
     var email = req.body.email
     const all_items = req.body.items
-    
-
-
-    
 
     const insertStore = `INSERT INTO receipts(store,receipt_date,fk_user_receipt) VALUES($1,$2,
         (SELECT user_id FROM users WHERE email = $3)) RETURNING receipt_id;`
 
     const insertItems = `INSERT INTO items(item_name,item_price,fk_item_receipt) VALUES %L`
 
-    /*const insertItems = `INSERT INTO items(item_name,item_price,fk_item_receipt) VALUES($1,$2,
-        (SELECT receipt_id from receipts WHERE fk_user_receipt = (SELECT user_id FROM users WHERE email =$3) ORDER BY receipt_id DESC
-        LIMIT 1))`*/
-
+    // create receipt (store, date, )
     pool.query(insertStore,receipt_data,(err,results)=>{
-        console.log('making submit request',results)
         
         if(err){
             console.log('error on first')
@@ -80,11 +73,8 @@ const uploadReceipt = (req,res,next)=>{
             var arr_items = Object.keys(all_items).map((key)=>{
                 return [all_items[key].item_name,parseFloat(all_items[key].price),rid]
             })
-
-
-
+            // add all items belonging to that receipt
             pool.query(format(insertItems,arr_items),[],(err)=>{
-                console.log('making second request',arr_items)
                 if(err){
                     next(err)
                 }
@@ -98,10 +88,10 @@ const uploadReceipt = (req,res,next)=>{
 };
 
 const getReceipts = (req,res,next)=>{
-    console.log('getttting')
     var email = req.session.email
     var quantity = req.query.quantity
-    //var quantity = req.params.quantity
+
+    // get receipts for specific user
     const getInfo =   `SELECT * FROM
                     (SELECT receipt_id as receipt_id_1
                     FROM receipts
@@ -116,7 +106,6 @@ const getReceipts = (req,res,next)=>{
     
     pool.query(getInfo,[email,quantity],(err,results)=>{
         if(err){
-            console.log('errrrororrr')
             return next(err)
         }
         res.locals.query_results = results.rows
@@ -125,11 +114,12 @@ const getReceipts = (req,res,next)=>{
 }
 
 const specific_receipt = (req,res,next)=>{
-    /** queries database for specific receipt  */
+
+    //queries database for specific receipt -- invoked when search item clicked from front end
 
     var specific_id = req.query.specific
     var email = req.session.email
-    console.log('specific id',specific_id)
+
     const getReceipt = `SELECT * FROM
                         (SELECT receipt_id as receipt_id_1
                         FROM receipts
@@ -146,7 +136,6 @@ const specific_receipt = (req,res,next)=>{
         if(err){
             return next(err)
         }
-        console.log(results)
         res.locals.query_results = results.rows
         next()
     })
@@ -158,7 +147,6 @@ const specific_receipt = (req,res,next)=>{
 const deleteReceipt = (req,res,next) =>{
     
     var receipt_id = req.query.receipt_id
-    console.log(req.body.receipt_id)
 
     const delete_receipt = `DELETE FROM receipts WHERE receipt_id = $1`
     pool.query(delete_receipt, [receipt_id],(err,results)=>{
@@ -174,14 +162,14 @@ const changePass = (req,res,next) =>{
     var old = req.body.old
     var new_pass = req.body.new
     var email = req.session.email
-    console.log('this is the email',email)
+
     const changePass = `SELECT password FROM users WHERE email = $1`
     const updatePass = `UPDATE users SET password = $1 WHERE email = $2 `
+
     pool.query(changePass,[email],(err,results)=>{
         if(err){
             next(err)
         }
-        console.log('here are the results for password change',results)
         if(results.rows[0].password !== old){
             console.log('does not match')
             res.send({message:"password-no-match"})
@@ -210,7 +198,6 @@ const changeEmail = (req,res,next) =>{
             next(err)
         }
         if(results.rows[0]){
-            console.log('email already in db')
             res.send({message:'email-in-use'})
             res.end()
         }else{
@@ -229,6 +216,7 @@ const changeEmail = (req,res,next) =>{
 const deleteAccount = (req,res,next) =>{
     var email = req.session.email
     const deleteAcc = `DELETE FROM users WHERE email = $1`
+
     pool.query(deleteAcc,[email],(err,result)=>{
         if(err){
             next(err)
@@ -240,8 +228,6 @@ const searchReceipts = (req,res,next)=>{
     var input = req.query.value
     var email = req.session.email
 
-
-    console.log('input',input)
     const search = `SELECT receipt_id AS price, store AS title, receipt_date AS description
                     FROM receipts
                     WHERE LOWER(receipts.store) LIKE $1 || '%'
@@ -249,17 +235,15 @@ const searchReceipts = (req,res,next)=>{
 
     pool.query(search,[input, email],(err,results)=>{
         if(err){
-            console.log('got error search',)
             return next(err)
         }
-        console.log('no error',results)
         res.locals.query_results = results
         next()
     })
 }
 
 var updateReceipt = (req,res,next)=>{
-    //get store name req.body
+    //get store name --req.body
     var rid = req.body.receipt_id
     var store = req.body.store
     var items = req.body.items
