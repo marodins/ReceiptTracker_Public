@@ -1,5 +1,5 @@
 import React from "react";
-import {Route, Switch} from 'react-router';
+import {Switch} from 'react-router';
 import Login from "./components/pages/Login";
 import Upload from "./components/pages/Upload";
 import Receipts from "./components/pages/Receipts";
@@ -34,7 +34,7 @@ class App extends React.Component{
         <PrivateRoute path="/upload" exact component = {Upload}/>
         <PrivateRoute path="/receipts" exact component = {Receipts}/>
         <PublicRoute path="/register" exact component = {Register}/>
-      </Switch>       
+      </Switch>
     )
   }
 }

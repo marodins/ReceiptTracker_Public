@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Redirect,withRouter} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import {LoginError} from '../messages/ErrorMessages'
 import Authenticate_user from '../../auth/login_auth';
 
@@ -48,7 +48,7 @@ class LoginForm extends React.Component{
                         this.props.history.push('/upload')
                     });
                 }
-                
+
             })
             .catch(error=>{
                 this.props.history.push('/');
@@ -67,7 +67,7 @@ class LoginForm extends React.Component{
                         </div>
                         <div class = "field">
                             <label>Password</label>
-                            <input 
+                            <input
                                 type = 'password'
                                 id = 'password'
                                 name = 'password'
@@ -80,7 +80,7 @@ class LoginForm extends React.Component{
                     </div>
                 </form>
             </div>
-  
+
 
         )
     }

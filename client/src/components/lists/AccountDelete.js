@@ -1,5 +1,5 @@
 import React from 'react'
-import {Message,Form,Button,List} from 'semantic-ui-react'
+import {List} from 'semantic-ui-react'
 import DeleteAccountForm from '../forms/DeleteAccountForm'
 
 //Delete form
@@ -32,11 +32,11 @@ class AccountDelete extends React.Component{
             <div>
                 <div>
                     {this.state.button?
-                        <List.Header onClick = {this.handleClick}>Delete Account</List.Header>: 
-                        <DeleteAccountForm cancel = {this.handleCancel} handleError = {this.props.handleError}/>}                 
+                        <List.Header onClick = {this.handleClick}>Delete Account</List.Header>:
+                        <DeleteAccountForm cancel = {this.handleCancel} handleError = {this.props.handleError}/>}
                 </div>
             </div>
-            
+
         )
 
     }
