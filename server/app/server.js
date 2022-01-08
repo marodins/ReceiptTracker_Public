@@ -26,6 +26,7 @@ var jwt = require('express-jwt');
 
 
 var path = require('path');
+let port = process.env.PORT;
 
 app.use(cors({
     origin:process.env.ORIGIN_URL,
@@ -43,15 +44,14 @@ var sess = {
         secure:false
     }
 }
-/*
+
 app.use(function(req,res,next){
     if (app.get('env')==='production'){
-        
         app.set('trust proxy',1)
         sess.cookie.secure = true
     }
     next()
-})*/
+})
 
 app.use(session(sess));
 
@@ -85,10 +85,9 @@ app.use(function(err,req,res,next){
 
 app.use(express.static(path.join(__dirname,'../client','build')));
 
-app.use((req,res)=>{
-    res.sendFile(path.resolve(__dirname,'../../client','build','index.html'));
-});
-
-app.listen(3131,()=>{
-    console.log('server listening')
+if(port == null || port == ""){
+  port = 8000;
+}
+app.listen(port, ()=>{
+  console.log('connected to ', port);
 });

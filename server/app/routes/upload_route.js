@@ -32,7 +32,7 @@ var sharpenImage = (path)=>{
 
 var runTes = (req,res,next)=>{
     // Run tesseract to analyze image file and convert to text
-        current = path.join(__dirname,'../',req.file.path)
+        current = req.file.path
         try{
             sharpenImage(current)
         }catch(err){
@@ -45,7 +45,7 @@ var runTes = (req,res,next)=>{
                     newReceipt.setAll().then(()=>{
                         var {email,store,items,date} = newReceipt.fullReceipt
                         res.locals.data = {email,store,items,date}
-                        next();                 
+                        next();
                     });
 
                 })
@@ -56,7 +56,7 @@ var runTes = (req,res,next)=>{
     }
 
 var fileUpload = multer({storage:storage});
-    
+
 
 var checkFolder = (req,res,next)=>{
     //make folder name using token and email
@@ -67,7 +67,7 @@ var checkFolder = (req,res,next)=>{
         fs.mkdirSync(folder);
     }
     req.fileDest=folder
-    
+
     next();
 }
 
@@ -77,4 +77,3 @@ router.post('/',check_token,checkFolder,fileUpload.single('avatar'),runTes,(req,
 
 
  module.exports = router
-
