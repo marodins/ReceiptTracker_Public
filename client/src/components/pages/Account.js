@@ -6,7 +6,7 @@ import AccountEmailChange from '../lists/AccountEmailChange'
 import AccountDelete from '../lists/AccountDelete'
 import {DeleteAccountError,EmailChangeError,PassChangeError} from '../messages/ErrorMessages'
 
-import {List,Icon, Segment} from 'semantic-ui-react'
+import {List,Icon, Segment, Container} from 'semantic-ui-react'
 
 
 
@@ -26,7 +26,7 @@ class Account extends React.Component{
 
     render(){
         return(
-            <div class = 'ui container'>
+            <Container>
                 <NavBar/>
                 <h1>
                     Welcome, {this.state.user}
@@ -57,7 +57,7 @@ class Account extends React.Component{
                     </List.Item>
                 </List>
 
-            </div>
+            </Container>
         )
     }
 

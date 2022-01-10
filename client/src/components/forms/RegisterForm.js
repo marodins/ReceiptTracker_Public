@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import RegisterMessage from '../messages/RegisterMessage'
+import {Form, Segment, Button, Container, Divider} from 'semantic-ui-react';
 
 
 class RegisterForm extends React.Component{
@@ -25,12 +26,16 @@ class RegisterForm extends React.Component{
     }
     getSubmit=(e)=>{
         // submit user input to server for registration
-        e.preventDefault();
         var dataSend = {email:this.state.email, password:this.state.password};
         axios.post('http://localhost:3131/register',dataSend)
-
             .then((res)=>{
-                this.setState({success:true});
+                console.log(res);
+                if(res.data.message == "taken"){
+                    this.setState({success:false});
+                }else{
+                    this.setState({success:true});
+                }
+                
             })
             .catch((error)=>{
                 this.setState({success:false});
@@ -38,15 +43,15 @@ class RegisterForm extends React.Component{
     };
     render(){
         return(
-            <div>
+            <Container fluid>
                 <RegisterMessage success={this.state.success} />
-                <form  class = "ui large form" onSubmit = {this.getSubmit}>
-                    <div class ="ui stacked segment">
-                        <div class = "field">
+                <Form onSubmit = {this.getSubmit}>
+                    <Segment>
+                        <Form.Field>
                             <label>Email</label>
                             <input onChange = {this.onChangeEmail} value = {this.state.email} type='email' id = 'email' name='email'></input>
-                        </div>
-                        <div class = "field">
+                        </Form.Field>
+                        <Form.Field>
                             <label>Password</label>
                             <input 
                                 type = 'password'
@@ -54,14 +59,13 @@ class RegisterForm extends React.Component{
                                 name = 'password'
                                 value = {this.state.password}
                                 onChange = {this.onChangePassword}
-                            >
-                        </input>
-                        </div>
-                        <button class = "ui fluid large teal submit button" type = "submit">Submit</button>
-                    </div>
-                </form>
+                            />
+                        </Form.Field>
+                        <Button color = "green" type = "submit" primary>Submit</Button>
+                    </Segment>
+                </Form>
 
-            </div>
+            </Container>
 
 
         )

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 import {Link} from 'react-router-dom'
-import { Segment,Container, Button} from 'semantic-ui-react';
+import { Segment, Button} from 'semantic-ui-react';
 import RegisterForm from '../forms/RegisterForm'
 
 

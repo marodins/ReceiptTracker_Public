@@ -1,18 +1,23 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import LoginForm from '../forms/LoginForm';
-import Authenticate_user from '../../auth/login_auth';
-import {Button, Divider,Form,Grid,Segment,Container, Header} from 'semantic-ui-react'
+import {Button, Divider,Grid,Segment,Container, Header} from 'semantic-ui-react'
 
 
 
 class Login extends React.Component {
+    
     constructor(props){
         super(props);
+        
+    }
+
+    toReg = () =>{
+        this.props.history.push('/register')
     }
     render(){
         return(
-            <div>
+            <Container fluid>
                 <Container textAlign='center'>
                   <Header as='h1'>Receipt Tracker</Header>
                   <Divider></Divider>  
@@ -25,16 +30,20 @@ class Login extends React.Component {
                                 <LoginForm />                    
                             </Grid.Column>
                             <Grid.Column verticalAlign = 'middle'>
-                                <div class = "ui message">
+                                <Segment>
                                     Don't have an account?
-                                    <Button><Link to ="/register">Register</Link></Button>
-                                </div>                    
+                                    <Button primary onClick={this.toReg}>
+                                        <Button.Content>
+                                            Register
+                                        </Button.Content>
+                                    </Button>
+                                </Segment>                    
                             </Grid.Column>
                         </Grid> 
                         <Divider vertical></Divider>               
                     </Segment>                
                 </Container>                
-            </div>
+            </Container>
 
 
 
@@ -43,4 +52,4 @@ class Login extends React.Component {
 
 }
 
-export default Login;
+export default withRouter(Login);

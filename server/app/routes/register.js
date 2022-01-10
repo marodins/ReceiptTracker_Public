@@ -9,6 +9,10 @@ var {registerUser} = require('../db/queries.js')
 
 
 router.post('/',registerUser,(req,res,next)=>{
+    if(res.locals.registercomplete){
+        console.log('unable');
+        return res.send({message:'taken'});
+    }
     res.send({message:'User registered'});
 });
 

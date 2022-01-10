@@ -1,7 +1,6 @@
 import React from 'react';
-import {Component} from 'react';
 import Authenticate_user from '../../auth/login_auth'
-import {Route,Redirect} from 'react-router-dom'
+import {Route,Redirect, Component} from 'react-router-dom'
 
 
 

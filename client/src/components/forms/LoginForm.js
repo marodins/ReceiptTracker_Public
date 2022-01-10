@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import {withRouter} from 'react-router-dom'
-import {LoginError} from '../messages/ErrorMessages'
+import {withRouter} from 'react-router-dom';
+import {LoginError} from '../messages/ErrorMessages';
+import {Button, Form, Segment} from 'semantic-ui-react';
 import Authenticate_user from '../../auth/login_auth';
 
 
@@ -57,15 +58,15 @@ class LoginForm extends React.Component{
 
     render(){
         return(
-            <div>
+            <Segment>
                 {this.state.loggedIn===false?<LoginError/>:null}
-                <form  class = "ui large form" onSubmit = {this.getSubmit}>
-                    <div class ="ui stacked segment">
-                        <div class = "field">
+                <Form onSubmit = {this.getSubmit}>
+                    <Segment basic>
+                        <Form.Field>
                             <label>Email</label>
                             <input onChange = {this.onChangeEmail} value = {this.state.email} type='email' id = 'email' name='email'></input>
-                        </div>
-                        <div class = "field">
+                        </Form.Field>
+                        <Form.Field>
                             <label>Password</label>
                             <input
                                 type = 'password'
@@ -74,12 +75,12 @@ class LoginForm extends React.Component{
                                 value = {this.state.password}
                                 onChange = {this.onChangePassword}
                             >
-                        </input>
-                        </div>
-                        <button class = "ui fluid large teal submit button" type = "submit">Submit</button>
-                    </div>
-                </form>
-            </div>
+                            </input>
+                        </Form.Field>
+                        <Button type = "submit" primary>Submit</Button>
+                    </Segment>
+                </Form>
+            </Segment>
 
 
         )

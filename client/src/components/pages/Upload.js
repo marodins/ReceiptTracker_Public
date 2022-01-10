@@ -2,7 +2,6 @@ import React from 'react';
 import NavBar from '../nav/NavBar'
 import UploadForm from '../forms/UploadForm'
 import LoadData from '../tables/LoadData'
-import Authenticate_user from '../../auth/login_auth'
 import {UploadMessages} from '../messages/UploadMessages'
 import {Popup,Button, PopupContent, Segment,Container} from 'semantic-ui-react'
 

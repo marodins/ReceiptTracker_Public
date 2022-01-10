@@ -8,12 +8,26 @@ var format = require('pg-format')
 const registerUser = (req,res,next)=>{
     const add_user = 'INSERT INTO Users(email,password) VALUES ($1,$2)';
     const add_these = [req.body.email,req.body.password];
-    pool.query(add_user,add_these,(error,result)=>{
-        if(error){
+
+    const check_if_exists = 'SELECT email FROM Users WHERE email = $1'
+    pool.query(check_if_exists,[req.body.email], (error, result)=>{
+        console.log(result.rows.length);
+        if (error){
             return next(error);
         }
-        next();
+        if (result.rows.length > 0){
+            res.locals.registercomplete = 'unable';
+        }else{
+            pool.query(add_user,add_these,(err,result)=>{
+                if(err){
+                    return next(err);
+                }
+                
+            })     
+        }
+        return next();
     })
+    
 };
 
 const loginUser = (req,res,next) =>{
