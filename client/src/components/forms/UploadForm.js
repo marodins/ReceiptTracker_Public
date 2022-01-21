@@ -22,7 +22,7 @@ class UploadForm extends React.Component{
             },
             fileName:null
         }
-        
+
     }
     onChangeFile = (e)=>{
         this.setState({fileChosen:e.target.files[0]})
@@ -30,7 +30,7 @@ class UploadForm extends React.Component{
     onChangeLoader = (bool,info)=>{
         this.setState({loading:bool},()=>{
             if(info){
-                this.props.handleData(info)                
+                this.props.handleData(info)
             }
 
         })
@@ -40,7 +40,7 @@ class UploadForm extends React.Component{
         e.preventDefault();
         const formFile = new FormData();
         formFile.append('avatar',this.state.fileChosen);
-        
+
         const headers = {
             headers:{'content-type':'multipart/form-data'},
             Authorization:this.props.token,
@@ -49,7 +49,7 @@ class UploadForm extends React.Component{
         this.onChangeLoader(true,null);
 
         // submit image file to server for processing
-        axios.post('http://localhost:3131/upload',formFile,headers)
+        axios.post('/upload',formFile,headers)
 
             .then(res=>{
                 this.onChangeLoader(false,res.data.data)
@@ -57,7 +57,7 @@ class UploadForm extends React.Component{
             .catch(error=>{
 
                 return this.props.handleCompletion('INCOMPLETE')
-            
+
             });
 
     }
@@ -76,17 +76,17 @@ class UploadForm extends React.Component{
                     <Form id = "upload-form" loading ={this.state.loading}>
                         <Form.Field>
                             <label>
-                               {this.state.fileChosen?this.state.fileChosen.name:null} 
+                               {this.state.fileChosen?this.state.fileChosen.name:null}
                             </label>
-                            
+
                             <Button onClick={this.selectFile}>Select File</Button>
-                            
-                            <input id = "fileUpload" onChange = {this.onChangeFile} type = "file" name = "receipt" hidden/>  
+
+                            <input id = "fileUpload" onChange = {this.onChangeFile} type = "file" name = "receipt" hidden/>
                         </Form.Field>
-                        
+
                         <Button size='medium' color ="blue" type ="submit" onClick = {this.onSubmitFile}>Upload</Button>
                     </Form>
-                </Segment>                
+                </Segment>
             </Container>
 
 

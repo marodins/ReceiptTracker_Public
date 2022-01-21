@@ -27,7 +27,7 @@ class RegisterForm extends React.Component{
     getSubmit=(e)=>{
         // submit user input to server for registration
         var dataSend = {email:this.state.email, password:this.state.password};
-        axios.post('http://localhost:3131/register',dataSend)
+        axios.post('/register',dataSend)
             .then((res)=>{
                 console.log(res);
                 if(res.data.message == "taken"){
@@ -35,7 +35,7 @@ class RegisterForm extends React.Component{
                 }else{
                     this.setState({success:true});
                 }
-                
+
             })
             .catch((error)=>{
                 this.setState({success:false});
@@ -53,7 +53,7 @@ class RegisterForm extends React.Component{
                         </Form.Field>
                         <Form.Field>
                             <label>Password</label>
-                            <input 
+                            <input
                                 type = 'password'
                                 id = 'password'
                                 name = 'password'

@@ -18,15 +18,16 @@ var app = express();
 const dotenv = require('dotenv').config({path:'../.env'});
 
 var cors = require('cors');
+var path = require('path');
+
+const ppath = path.join(__dirname,'../../client','build');
 
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var jwt = require('express-jwt');
 
-
-var path = require('path');
-let port = process.env.PORT;
+let port = process.env.PORT || 3131;
 
 app.use(cors({
     origin:process.env.ORIGIN_URL,
@@ -83,11 +84,12 @@ app.use(function(err,req,res,next){
 });
 
 
-app.use(express.static(path.join(__dirname,'../client','build')));
+app.use(express.static(ppath));
 
-if(port == null || port == ""){
-  port = 8000;
-}
+app.get('*', (req,res)=>{
+  res.sendFile(path.join(ppath,'index.html'))
+})
+
 app.listen(port, ()=>{
   console.log('connected to ', port);
 });

@@ -35,7 +35,7 @@ class LoginForm extends React.Component{
             password: this.state.password
         }
         // request to authorize user
-        axios.post('http://localhost:3131/login',containedHere,{withCredentials:true})
+        axios.post('/login',containedHere,{withCredentials:true})
             .then(res=>{
                 if(res.data.authentication === "mismatch"){
                     this.setState({loggedIn:false})
