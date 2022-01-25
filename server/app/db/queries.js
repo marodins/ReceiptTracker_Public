@@ -41,10 +41,10 @@ const loginUser = (req,res,next) =>{
             return next(err);
         }
         if(result.rows.length > 0){
-            var token = jwt.sign({email},'appleCarrot',{
-                expiresIn:30000000
-            })
             if (result.rows[0].password === password){
+                var token = jwt.sign({email},'appleCarrot',{
+                    expiresIn:30000000
+                })
                 req.session.email = email;
                 res.cookie('token',token,{httpOnly:true});
                 res.send({authentication:"user-authenticated", user:email,token:token})
@@ -68,7 +68,7 @@ const uploadReceipt = (req,res,next)=>{
     //all [['banana',12,'account1@yahoo.com'],[...]]
     var email = req.body.email
     const all_items = req.body.items
-
+    console.log('receipt data:', receipt_data, email);
     const insertStore = `INSERT INTO receipts(store,receipt_date,fk_user_receipt) VALUES($1,$2,
         (SELECT user_id FROM users WHERE email = $3)) RETURNING receipt_id;`
 
@@ -181,9 +181,9 @@ const changePass = (req,res,next) =>{
     pool.query(changePass,[email],(err,results)=>{
         if(err){
             console.log(err);
-            next(err)
+            return next(err)
         }
-        else if(results.rows[0].password !== old){
+        if(results.rows[0].password !== old){
             res.send({message:"password-no-match"})
             res.end()
         }
