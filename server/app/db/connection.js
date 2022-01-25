@@ -3,7 +3,10 @@ require('dotenv').config()
 
 //gets all info from env variables
 var pool = new Pool({
-  ssl: process.env.NODE_ENV ==="production"
+  connectionString: process.env.DB_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 module.exports=pool
