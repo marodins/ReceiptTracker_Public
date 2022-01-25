@@ -11,7 +11,6 @@ const registerUser = (req,res,next)=>{
 
     const check_if_exists = 'SELECT email FROM Users WHERE email = $1'
     pool.query(check_if_exists,[req.body.email], (error, result)=>{
-        console.log(result.rows.length);
         if (error){
             return next(error);
         }
@@ -22,23 +21,23 @@ const registerUser = (req,res,next)=>{
                 if(err){
                     return next(err);
                 }
-                
-            })     
+
+            })
         }
         return next();
     })
-    
+
 };
 
 const loginUser = (req,res,next) =>{
     const check_user = 'SELECT email, password from users WHERE email = $1';
     const email = req.body.email;
     const password = req.body.password;
-    
+
     pool.query(check_user,[email],(err,result)=>{
-        console.log('here is info sent',email,password);
-        console.log(result);
+        console.log('sending', email)
         if (err){
+            res.send({authentication:"mismatch"})
             return next(err);
         }
         if(result.rows.length > 0){
@@ -77,9 +76,8 @@ const uploadReceipt = (req,res,next)=>{
 
     // create receipt (store, date, )
     pool.query(insertStore,receipt_data,(err,results)=>{
-        
+
         if(err){
-            console.log('error on first')
             next(err)
         }
         else{
@@ -115,9 +113,9 @@ const getReceipts = (req,res,next)=>{
                     (SELECT store, receipt_date, item_name,item_price,item_id, receipt_id
                     FROM receipts
                     INNER JOIN items on receipts.receipt_id = items.fk_item_receipt)q2
-                    
+
                     ON q1.receipt_id_1 = q2.receipt_id;`
-    
+
     pool.query(getInfo,[email,quantity],(err,results)=>{
         if(err){
             return next(err)
@@ -143,7 +141,7 @@ const specific_receipt = (req,res,next)=>{
                         (SELECT store, receipt_date, item_name,item_price,item_id, receipt_id
                         FROM receipts
                         INNER JOIN items on receipts.receipt_id = items.fk_item_receipt)q2
-                        
+
                         ON q2.receipt_id = q1.receipt_id_1;`
 
     pool.query(getReceipt,[email,specific_id],(err,results)=>{
@@ -153,13 +151,13 @@ const specific_receipt = (req,res,next)=>{
         res.locals.query_results = results.rows
         next()
     })
-    
+
 
 
 }
 
 const deleteReceipt = (req,res,next) =>{
-    
+
     var receipt_id = req.query.receipt_id
 
     const delete_receipt = `DELETE FROM receipts WHERE receipt_id = $1`
@@ -185,7 +183,6 @@ const changePass = (req,res,next) =>{
             next(err)
         }
         if(results.rows[0].password !== old){
-            console.log('does not match')
             res.send({message:"password-no-match"})
             res.end()
         }
@@ -266,9 +263,8 @@ var updateReceipt = (req,res,next)=>{
     //get receipt date
     var date = req.body.date
 
-    console.log(store,date,items)
     //delete current items of that rid
-    const updateRec =  `UPDATE receipts 
+    const updateRec =  `UPDATE receipts
                         SET store = $1, receipt_date = $2
                         WHERE receipt_id = $3`
     const deleteCurrentItems =`DELETE FROM items WHERE fk_item_receipt = $1`

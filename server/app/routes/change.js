@@ -13,7 +13,6 @@ router.post('/email',check_token,changeEmail,(req,res,next)=>{
 })
 
 router.delete('/delete',check_token,deleteAccount,(req,res,next)=>{
-    console.log('alright')
     res.send({message:"successfully-deleted"})
 })
 

@@ -30,7 +30,7 @@ var jwt = require('express-jwt');
 let port = process.env.PORT || 3131;
 
 app.use(cors({
-    origin:process.env.ORIGIN_URL_dev,
+    origin:'https://receipt-tracker.herokuapp.com',
     credentials:true
 }));
 
@@ -85,10 +85,6 @@ app.use(function(err,req,res,next){
 
 
 app.use(express.static(ppath));
-
-app.get('*', (req,res)=>{
-  res.sendFile(path.join(ppath,'index.html'))
-})
 
 app.listen(port, ()=>{
   console.log('connected to ', port);
