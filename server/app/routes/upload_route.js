@@ -60,7 +60,7 @@ var fileUpload = multer({storage:storage});
 
 var checkFolder = (req,res,next)=>{
     //make folder name using token and email
-    folder = path.join('../uploads',req.session.email+req.cookies.token.slice(-10),'/')
+    folder = path.join('../../uploads',req.session.email+req.cookies.token.slice(-10),'/')
 
     //check if folder exists for user-token
     if (!fs.existsSync(folder)){
