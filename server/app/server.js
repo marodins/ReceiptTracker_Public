@@ -22,7 +22,7 @@ var path = require('path');
 
 const ppath = path.join(__dirname,'../../client','build');
 
-var session = require('express-session');
+var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var jwt = require('express-jwt');
@@ -30,7 +30,7 @@ var jwt = require('express-jwt');
 let port = process.env.PORT || 3131;
 
 app.use(cors({
-    origin:process.env.ORIGIN_URL,
+    origin:process.env.ORIGIN_URL_dev,
     credentials:true
 }));
 
@@ -38,7 +38,7 @@ app.use(cookieParser());
 
 
 var sess = {
-    secret:process.env.SESS_SECRET,
+    keys:[process.env.SESS_SECRET],
     resave:false,
     saveUninitialized:false,
     cookie:{

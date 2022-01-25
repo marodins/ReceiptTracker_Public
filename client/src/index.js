@@ -6,7 +6,7 @@ import axios from 'axios';
 import "semantic-ui-css/semantic.min.css";
 import "./css/root.css";
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE;
+//axios.defaults.baseURL = process.env.REACT_APP_BASE;
 ReactDOM.render(
   <BrowserRouter>
     <App />
