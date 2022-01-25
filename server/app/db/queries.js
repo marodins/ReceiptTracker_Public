@@ -176,13 +176,14 @@ const changePass = (req,res,next) =>{
     var email = req.session.email
 
     const changePass = `SELECT password FROM users WHERE email = $1`
-    const updatePass = `UPDATE users SET password = $1 WHERE email = $2 `
+    const updatePass = `UPDATE users SET password = $1 WHERE email = $2`
 
     pool.query(changePass,[email],(err,results)=>{
         if(err){
+            console.log(err);
             next(err)
         }
-        if(results.rows[0].password !== old){
+        else if(results.rows[0].password !== old){
             res.send({message:"password-no-match"})
             res.end()
         }
