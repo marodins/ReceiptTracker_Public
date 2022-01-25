@@ -3,7 +3,7 @@ require('dotenv').config()
 
 //gets all info from env variables
 var pool = new Pool({
-  connectionString: process.env.DB_URL,
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
