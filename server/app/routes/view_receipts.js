@@ -1,7 +1,3 @@
-//edit receipts
-//add receipts
-//get receipts
-//delete receipts
 
 var express = require('express')
 var router = express.Router()
@@ -14,7 +10,7 @@ router.delete('/delete',check_token,deleteReceipt,(req,res)=>{
 });
 
 router.put('/update',check_token,updateReceipt,(req,res)=>{
-    res.send({message:"successfully deleted"})
+    res.send({message:"successfully updated"})
 });
 
 router.get('/',check_token,check_query,(req,res,next)=>{

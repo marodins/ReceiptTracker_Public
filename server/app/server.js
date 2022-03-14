@@ -15,8 +15,6 @@ var express = require('express')
 
 var app = express();
 
-const dotenv = require('dotenv').config({path:'../.env'});
-
 var cors = require('cors');
 var path = require('path');
 
@@ -25,7 +23,6 @@ const ppath = path.join(__dirname,'../../client','build');
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var jwt = require('express-jwt');
 
 let port = process.env.PORT || 3131;
 
