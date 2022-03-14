@@ -7,6 +7,7 @@ var Tesseract = require('tesseract.js');
 var path = require('path');
 var {Receipt} = require('../methods/analyze_receipt.js');
 var gm = require('gm');
+var {storage} = require('../db/firebase_config');
 
 
 var storage = multer.diskStorage(
