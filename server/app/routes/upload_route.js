@@ -6,16 +6,17 @@ var check_token = require('../auth/check_token');
 var Tesseract = require('tesseract.js');
 var fs = require('file-system');
 var path = require('path');
-var {Receipt} = require('../methods/analyzeReceipt.js');
+var {Receipt} = require('../methods/analyze_receipt.js');
 var gm = require('gm');
 
 
 var storage = multer.diskStorage(
     {destination:function(req,file,callback){
-        name = req.fileDest
-        callback(null,name)
+        pname = req.fileDest
+        callback(null,pname)
     },filename:function(req,file,callback){
-        fileName = file.originalname
+        fileName = req.session.email + Date.now() + file.originalname
+        req.fileName = fileName
         callback(null,fileName)
     }});
 
@@ -60,14 +61,8 @@ var fileUpload = multer({storage:storage});
 
 var checkFolder = (req,res,next)=>{
     //make folder name using token and email
-    folder = path.join('../../uploads',req.session.email+req.cookies.token.slice(-10),'/')
-
-    //check if folder exists for user-token
-    if (!fs.existsSync(folder)){
-        fs.mkdirSync(folder);
-    }
-    req.fileDest=folder
-
+    folder = '../../uploads/'
+    req.fileDest = folder
     next();
 }
 
