@@ -61,7 +61,7 @@ var fileUpload = multer({storage:storage});
 
 var checkFolder = (req,res,next)=>{
     //make folder name using token and email
-    folder = '../../uploads/'
+    folder = path.join(__dirname,'../../uploads/')
     req.fileDest = folder
     next();
 }
