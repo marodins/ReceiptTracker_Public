@@ -4,7 +4,6 @@ var router = express.Router();
 var multer = require('multer');
 var check_token = require('../auth/check_token');
 var Tesseract = require('tesseract.js');
-var fs = require('file-system');
 var path = require('path');
 var {Receipt} = require('../methods/analyze_receipt.js');
 var gm = require('gm');
