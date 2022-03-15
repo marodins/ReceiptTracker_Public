@@ -9,15 +9,15 @@ const check_token = (req,res,next)=>{
     // if token exists
     if(token){
         // decrypt using key
-        jwt.verify(token,'appleCarrot',function(err,decoded){
+        jwt.verify(token,process.env.JWTSECRET,function(err,decoded){
             if(err){
-                next(err);
+                return next(err);
             }
-            next();
+            return next();
         })
     }
     else{
-        next(new Error("Not authenticated") );
+        return next(new Error("Not authenticated") );
     }
 }
 

@@ -27,7 +27,7 @@ var cookieParser = require('cookie-parser');
 let port = process.env.PORT || 3131;
 
 app.use(cors({
-    origin:'https://receipt-tracker.herokuapp.com',
+    origin: process.env.NODE_ENV === 'development'? "http://localhost:3000" : "https://receipt-tracker.herokuapp.com",
     credentials:true
 }));
 

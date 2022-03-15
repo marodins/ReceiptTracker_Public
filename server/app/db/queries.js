@@ -37,17 +37,17 @@ const loginUser = (req,res,next) =>{
     pool.query(check_user,[email],(err,result)=>{
         console.log('sending', email)
         if (err){
-            res.send({authentication:"mismatch"})
-            return next(err);
+            console.log(err)
+            return res.send({authentication:"mismatch"})
         }
         if(result.rows.length > 0){
             if (result.rows[0].password === password){
-                var token = jwt.sign({email},'appleCarrot',{
+                var token = jwt.sign({email},process.env.JWTSECRET,{
                     expiresIn:30000000
                 })
                 req.session.email = email;
                 res.cookie('token',token,{httpOnly:true});
-                res.send({authentication:"user-authenticated", user:email,token:token})
+                return res.send({authentication:"user-authenticated", user:email,token:token})
             }
             else{
                 return res.send({authentication:"mismatch"})

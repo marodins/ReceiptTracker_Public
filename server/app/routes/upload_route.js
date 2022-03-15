@@ -13,16 +13,14 @@ var storage = multer.memoryStorage();
 
 var processImage = (req, res, next)=>{
 
-    gm(req.file.buffer)
+    gm(req.file.buffer, req.file.originalname)
     .monochrome()
     .sharpen(14,4)
     .toBuffer((err, buffer)=>{
-        console.log('error', err);
-        console.log('buffer',buffer);
         if(err){
             return next(err);
         }
-        Tesseract.recognize(buffer,'eng',{logger:e=>{console.log('working')}})
+        Tesseract.recognize(buffer,'eng')
         .then(({data:{text}})=>{
             var newReceipt = new Receipt(text,req,res)
 
@@ -46,7 +44,7 @@ var fileUpload = multer({storage:storage});
 
 
 router.post('/',check_token,fileUpload.single('avatar'),processImage,(req,res,next)=>{
-    res.send({message:'upload complete',data:res.locals.data})
+    return res.send({message:'upload complete',data:res.locals.data})
 })
 
 
