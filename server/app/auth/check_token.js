@@ -5,11 +5,12 @@ const jwt = require('jsonwebtoken');
 
 const check_token = (req,res,next)=>{
     var token = req.cookies.token;
+    console.log(req)
     
     // if token exists
     if(token){
         // decrypt using key
-        jwt.verify(token,process.env.JWTSECRET,function(err,decoded){
+        jwt.verify(token,process.env.JWTSECRET,(err,decoded)=>{
             if(err){
                 return next(err);
             }

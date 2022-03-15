@@ -37,7 +37,6 @@ const loginUser = (req,res,next) =>{
     pool.query(check_user,[email],(err,result)=>{
         console.log('sending', email)
         if (err){
-            console.log(err)
             return res.send({authentication:"mismatch"})
         }
         if(result.rows.length > 0){
