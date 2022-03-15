@@ -12,13 +12,15 @@ var gm = require('gm');
 var storage = multer.memoryStorage();
 
 var processImage = (req, res, next)=>{
-    
+
     gm(req.file.buffer)
     .monochrome()
     .sharpen(14,4)
     .toBuffer((err, buffer)=>{
+        console.log('error', err);
+        console.log('buffer',buffer);
         if(err){
-            throw new Error('not an image');
+            return next(err);
         }
         Tesseract.recognize(buffer,'eng',{logger:e=>{console.log('working')}})
         .then(({data:{text}})=>{
