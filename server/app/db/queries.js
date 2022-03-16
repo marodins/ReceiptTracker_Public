@@ -99,16 +99,15 @@ const uploadReceipt = (req,res,next)=>{
             // add all items belonging to that receipt
 
             for(item in arr_items){
+                console.log('adding', item)
                 pool.query(insertItems,item,(err)=>{
                     if(err){
-                        next(err)
-                    }
-                    else{
-                        next()
+                        return next(err)
                     }
                 })                
 
             }
+            return next();
 
         }
 
