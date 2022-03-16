@@ -12,7 +12,7 @@ var gm = require('gm');
 var storage = multer.memoryStorage();
 
 var processImage = (req, res, next)=>{
-
+    console.log('current req.file', req.file)
     gm(req.file.buffer, req.file.originalname)
     .monochrome()
     .sharpen(14,4)
