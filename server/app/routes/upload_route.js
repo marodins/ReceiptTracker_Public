@@ -11,7 +11,7 @@ var gm = require('gm');
 
 var storage = multer.diskStorage({
     destination:(req, file, cb)=>{
-        cb(null, 'uploads/')
+        cb(null, './uploads/')
     },
     filename:(req, file, cb)=>{
         cb(null, Date.now() + file.originalname)
@@ -19,11 +19,14 @@ var storage = multer.diskStorage({
 });
 
 var processImage = (req, res, next)=>{
-
+    console.log(req.file.path)
+    var ext = req.file.originalname.slice('/')[1]
     gm(req.file.path)
     .monochrome()
     .sharpen(14,4)
+    .setFormat(ext)
     .toBuffer((err, buffer)=>{
+        console.log(buffer)
         if(err){
             console.log(err)
             return next(err);
@@ -52,7 +55,7 @@ var processImage = (req, res, next)=>{
 var fileUpload = multer({storage:storage});
 
 
-router.post('/',fileUpload.single('avatar'),processImage,(req,res,next)=>{
+router.post('/',check_token,fileUpload.single('avatar'),processImage,(req,res,next)=>{
     return res.send({message:'upload complete',data:res.locals.data})
 })
 
