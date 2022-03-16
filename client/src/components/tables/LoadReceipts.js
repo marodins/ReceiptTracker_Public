@@ -35,7 +35,9 @@ class LoadReceipts extends React.Component{
     }
 
     handleDelete = (e) =>{
+        
         var id = {params:{receipt_id:this.state.data.receipt_id}}
+
         this.setState({deleteLoading:true})
 
         var header = {
@@ -44,7 +46,7 @@ class LoadReceipts extends React.Component{
         axios.delete('/receipts/delete',id,header)
         .then(res=>{
             this.setState({deleteLoading:false})
-            this.props.getAll()
+            return this.props.getAll()
         })
         .catch(err=>console.log(err))
     }
@@ -71,7 +73,6 @@ class LoadReceipts extends React.Component{
         this.setState({edit_table:true})
     }
     render(){
-        console.log('modalOn?',this.props.modalOn,this.state.showModal)
         var store = this.props.data.store
         var date = this.props.data.receipt_date
         return(

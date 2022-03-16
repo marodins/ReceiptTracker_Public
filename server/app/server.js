@@ -84,7 +84,7 @@ app.use(function(err,req,res,next){
 app.use(express.static(ppath));
 
 app.get('*', (req, res, next)=>{
-    return res.sendFile(path.join(__dirname, '../../client/public/index.html'))
+    return res.redirect('https://receipt-tracker.herokuapp.com')
 })
 
 app.listen(port, ()=>{
