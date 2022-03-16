@@ -95,10 +95,9 @@ const uploadReceipt = (req,res,next)=>{
                 var item_name = all_items[key].item_name
                 return [item_name, price,rid]
             })
-            console.log(arr_items)
             // add all items belonging to that receipt
 
-            for(item in arr_items){
+            for(var item of arr_items){
                 console.log('adding', item)
                 pool.query(insertItems,item,(err)=>{
                     if(err){
