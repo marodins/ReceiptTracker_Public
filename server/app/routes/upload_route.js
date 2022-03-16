@@ -13,9 +13,11 @@ var storage = multer.memoryStorage();
 
 var processImage = (req, res, next)=>{
     console.log('current req.file', req.file)
+    var formatImg = req.file.originalname.split('/')[1]
     gm(req.file.buffer, req.file.originalname)
     .monochrome()
     .sharpen(14,4)
+    .setFormat(formatImg)
     .toBuffer((err, buffer)=>{
         if(err){
             return next(err);
