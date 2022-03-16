@@ -51,7 +51,7 @@ class LoadData extends React.Component{
         var headers = {
             withCredentials:true
         }
-        axios.post('http://localhost:3131/submit_receipt',all_data,headers)
+        axios.post('/submit_receipt',all_data,headers)
         .then(res=>{
             console.log(res)
             this.setState({loading:false},()=>{
