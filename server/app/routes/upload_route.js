@@ -27,12 +27,13 @@ var processImage = (req, res, next)=>{
             newReceipt.setAll().then(()=>{
                 var {email,store,items,date} = newReceipt.fullReceipt
                 res.locals.data = {email,store,items,date}
-                next();
+                console.log(res.locals)
+                return next();
             });
 
         })
         .catch(err=>{
-            next(err)
+            return next(err)
         })
 
 

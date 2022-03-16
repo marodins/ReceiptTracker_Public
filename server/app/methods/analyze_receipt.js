@@ -18,7 +18,7 @@ class Receipt{
     setAll = async function(){
         // runs methods and sets items, store, date
         await this.createParsed()
-        await Promise.all([this.setItems(),this.setStore(),this.setDate()])
+        return Promise.all([this.setItems(),this.setStore(),this.setDate()])
     }
 
     setDate = () =>{
