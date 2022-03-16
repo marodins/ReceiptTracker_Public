@@ -90,7 +90,10 @@ const uploadReceipt = (req,res,next)=>{
         else{
             var rid = results.rows[0].receipt_id
             var arr_items = Object.keys(all_items).map((key)=>{
-                return [all_items[key].item_name,parseFloat(all_items[key].price),rid]
+
+                var price = all_items[key].price ? parseFloat(all_items[key].price): 0.0
+                var item_name = all_items[key].item_name
+                return [item_name, price,rid]
             })
             console.log(arr_items)
             // add all items belonging to that receipt
