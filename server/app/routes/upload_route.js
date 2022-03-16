@@ -26,13 +26,12 @@ var processImage = (req, res, next)=>{
     .monochrome()
     .sharpen(14,4)
     .setFormat(ext)
-    .toBuffer((err, buffer)=>{
-        console.log(buffer)
+    .write(req.file.filename, (err)=>{
         if(err){
             console.log(err)
             return next(err);
         }
-        Tesseract.recognize(buffer,'eng')
+        Tesseract.recognize(req.file.path,'eng')
         .then(({data:{text}})=>{
             var newReceipt = new Receipt(text,req,res)
 
