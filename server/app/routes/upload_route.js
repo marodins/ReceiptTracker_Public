@@ -7,6 +7,7 @@ var Tesseract = require('tesseract.js');
 var path = require('path');
 var {Receipt} = require('../methods/analyze_receipt.js');
 var gm = require('gm');
+var fs = require('file-system');
 
 
 var storage = multer.diskStorage({
@@ -54,8 +55,12 @@ var processImage = (req, res, next)=>{
 
 var fileUpload = multer({storage:storage});
 
+var check_folder = (req, res, next)=>{
+    fs.mkdir('./uploads');
+    next();
+}
 
-router.post('/',check_token,fileUpload.single('avatar'),processImage,(req,res,next)=>{
+router.post('/',check_token,check_folder, fileUpload.single('avatar'),processImage,(req,res,next)=>{
     return res.send({message:'upload complete',data:res.locals.data})
 })
 
