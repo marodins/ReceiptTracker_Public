@@ -135,7 +135,7 @@ const getReceipts = (req,res,next)=>{
             return next(err)
         }
         res.locals.query_results = results.rows
-        next()
+        return next()
     })
 }
 

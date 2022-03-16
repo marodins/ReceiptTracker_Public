@@ -42,6 +42,7 @@ class Receipts extends React.Component{
         axios.get('/receipts',params,headers)
             .then(res=>{
                 var {data} = res.data
+                console.log(data);
                 this.createDataObject(data,specific)
             })
             .catch(err=>{

@@ -7,7 +7,7 @@ const { uploadReceipt } = require('../db/queries.js')
 
 
 router.post('/',check_token,uploadReceipt,(req,res,next)=>{
-    res.status(200).send({message:"success"})
+    return res.status(200).send({message:"success"})
 })
 
 
