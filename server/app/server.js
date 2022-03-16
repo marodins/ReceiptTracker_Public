@@ -83,6 +83,10 @@ app.use(function(err,req,res,next){
 
 app.use(express.static(ppath));
 
+app.get('*', (req, res, next)=>{
+    return res.sendFile(path.join(__dirname, '../../client/public/index.html'))
+})
+
 app.listen(port, ()=>{
   console.log('connected to ', port);
 });

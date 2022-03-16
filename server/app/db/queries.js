@@ -177,9 +177,9 @@ const deleteReceipt = (req,res,next) =>{
     const delete_receipt = `DELETE FROM receipts WHERE receipt_id = $1`
     pool.query(delete_receipt, [receipt_id],(err,results)=>{
         if(err){
-            next(err)
+            return next(err)
         }
-        next()
+        return next()
     })
 
 }

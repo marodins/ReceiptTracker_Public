@@ -53,7 +53,7 @@ class LoadData extends React.Component{
         }
         axios.post('/submit_receipt',all_data,headers)
         .then(res=>{
-            console.log(res)
+
             this.setState({loading:false},()=>{
                 //no error--false
                 this.props.setComplete(false)
@@ -86,7 +86,6 @@ class LoadData extends React.Component{
     }
 
     valueChange = (e) =>{
-        console.log('cur va',e.target.value)
 
         var current = e.target.defaultValue
         var id = e.target.id
