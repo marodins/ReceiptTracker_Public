@@ -57,7 +57,7 @@ var processImage = (req, res, next)=>{
 var fileUpload = multer({storage:storage});
 
 var check_folder = (req, res, next)=>{
-    fs.mkdir('app/uploads');
+    fs.mkdirSync('app/uploads');
     next();
 }
 

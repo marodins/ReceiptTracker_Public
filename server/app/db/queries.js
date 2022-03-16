@@ -92,6 +92,7 @@ const uploadReceipt = (req,res,next)=>{
             var arr_items = Object.keys(all_items).map((key)=>{
                 return [all_items[key].item_name,parseFloat(all_items[key].price),rid]
             })
+            console.log(arr_items)
             // add all items belonging to that receipt
             pool.query(format(insertItems,arr_items),[],(err)=>{
                 if(err){

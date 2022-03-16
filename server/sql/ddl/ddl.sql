@@ -17,7 +17,5 @@ CREATE TABLE Items(
   item_name varchar(255) NOT NULL,
   item_price INT,
   receipt_id INT,
-  CONSTRAINT fk_item_store
-    FOREIGN KEY (receipt_id)
-      REFERENCES Receipts(receipt_id)
+  fk_item_receipt int REFERENCES Receipts(receipt_id)
 );
