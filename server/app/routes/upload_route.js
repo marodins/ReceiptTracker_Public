@@ -12,7 +12,7 @@ var fs = require('file-system');
 
 var storage = multer.diskStorage({
     destination:(req, file, cb)=>{
-        cb(null, './uploads/')
+        cb(null, 'app/uploads/')
     },
     filename:(req, file, cb)=>{
         cb(null, Date.now() + file.originalname)
@@ -56,7 +56,7 @@ var processImage = (req, res, next)=>{
 var fileUpload = multer({storage:storage});
 
 var check_folder = (req, res, next)=>{
-    fs.mkdir('./uploads');
+    fs.mkdir('app/uploads');
     next();
 }
 
