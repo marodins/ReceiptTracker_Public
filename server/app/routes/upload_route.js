@@ -9,17 +9,23 @@ var {Receipt} = require('../methods/analyze_receipt.js');
 var gm = require('gm');
 
 
-var storage = multer.memoryStorage();
+var storage = multer.diskStorage({
+    destination:(req, file, cb)=>{
+        cb(null, 'uploads/')
+    },
+    filename:(req, file, cb)=>{
+        cb(null, Date.now() + file.originalname)
+    }
+});
 
 var processImage = (req, res, next)=>{
-    console.log('current req.file', req.file)
-    var formatImg = req.file.originalname.split('/')[1]
-    gm(req.file.buffer, req.file.originalname)
+
+    gm(req.file.path)
     .monochrome()
     .sharpen(14,4)
-    .setFormat(formatImg)
     .toBuffer((err, buffer)=>{
         if(err){
+            console.log(err)
             return next(err);
         }
         Tesseract.recognize(buffer,'eng')
@@ -46,7 +52,7 @@ var processImage = (req, res, next)=>{
 var fileUpload = multer({storage:storage});
 
 
-router.post('/',check_token,fileUpload.single('avatar'),processImage,(req,res,next)=>{
+router.post('/',fileUpload.single('avatar'),processImage,(req,res,next)=>{
     return res.send({message:'upload complete',data:res.locals.data})
 })
 

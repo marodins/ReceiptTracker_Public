@@ -33,7 +33,15 @@ const loginUser = (req,res,next) =>{
     const check_user = 'SELECT email, password from users WHERE email = $1';
     const email = req.body.email;
     const password = req.body.password;
-
+    
+    if(process.env.NODE_ENV === 'development'){
+        var token = jwt.sign({email},process.env.JWTSECRET,{
+            expiresIn:30000000
+        })
+        req.session.email = email;
+        res.cookie('token',token,{httpOnly:true});
+        return res.send({authentication:"user-authenticated", user:email,token:token})
+    }
     pool.query(check_user,[email],(err,result)=>{
         console.log('sending', email)
         if (err){
