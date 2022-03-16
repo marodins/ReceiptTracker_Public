@@ -79,7 +79,7 @@ const uploadReceipt = (req,res,next)=>{
     const insertStore = `INSERT INTO receipts(store,receipt_date,fk_user_receipt) VALUES($1,$2,
         (SELECT user_id FROM users WHERE email = $3)) RETURNING receipt_id;`
 
-    const insertItems = `INSERT INTO items(item_name,item_price,fk_item_receipt) VALUES %L`
+    const insertItems = `INSERT INTO items(item_name,item_price,fk_item_receipt) VALUES($1, $2, $3)`
 
     // create receipt (store, date, )
     pool.query(insertStore,receipt_data,(err,results)=>{
@@ -97,14 +97,19 @@ const uploadReceipt = (req,res,next)=>{
             })
             console.log(arr_items)
             // add all items belonging to that receipt
-            pool.query(format(insertItems,arr_items),[],(err)=>{
-                if(err){
-                    next(err)
-                }
-                else{
-                    next()
-                }
-            })
+
+            for(item in arr_items){
+                pool.query(insertItems,item,(err)=>{
+                    if(err){
+                        next(err)
+                    }
+                    else{
+                        next()
+                    }
+                })                
+
+            }
+
         }
 
     })

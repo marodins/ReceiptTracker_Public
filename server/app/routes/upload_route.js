@@ -22,7 +22,6 @@ var storage = multer.diskStorage({
 });
 
 var processImage = (req, res, next)=>{
-    console.log(req.file.path)
     var ext = req.file.originalname.slice('/')[1]
     gm(req.file.path)
     .monochrome()
@@ -30,7 +29,6 @@ var processImage = (req, res, next)=>{
     .setFormat(ext)
     .write(req.file.filename, (err)=>{
         if(err){
-            console.log(err)
             return next(err);
         }
         Tesseract.recognize(req.file.path,'eng')
@@ -40,7 +38,6 @@ var processImage = (req, res, next)=>{
             newReceipt.setAll().then(()=>{
                 var {email,store,items,date} = newReceipt.fullReceipt
                 res.locals.data = {email,store,items,date}
-                console.log(res.locals)
                 return next();
             });
 
