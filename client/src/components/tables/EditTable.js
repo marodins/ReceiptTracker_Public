@@ -74,7 +74,7 @@ class EditTable extends React.Component{
                     this.props.setMessage('success')
                     this.props.operateModal()
                 })
-                this.props.updateData(this.props.data)
+                this.props.setData(this.props.data)
                 this.props.getAll()
             })
             .catch(err=>{

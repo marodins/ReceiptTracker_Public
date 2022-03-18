@@ -90,6 +90,12 @@ class Receipts extends React.Component{
         }
         this.setState({success:null})
     }
+
+    setData = (updatedData)=>{
+        this.setState({
+            data:updatedData
+        })
+    }
     setModal = (id)=>{
         if(!(this.state.data[id]) && id!==''){
             return this.getAll(id)
@@ -124,7 +130,8 @@ class Receipts extends React.Component{
                                         data = {this.state.data[key]} 
                                         setMessage={this.setMessage} 
                                         modalOn={this.state.selected}
-                                        clearModal={this.setModal} />
+                                        clearModal={this.setModal} 
+                                        updateData={this.setData}/>
                                 )
                         })}                    
                     </Card.Group>                   
