@@ -88,7 +88,7 @@ class LoadReceipts extends React.Component{
                         }}
                         open = {this.state.edit_table}>
                         <EditTable 
-                            data = {this.state.data} 
+                            data = {this.props.data} 
                             setMessage = {this.props.setMessage} 
                             operateModal = {()=>
                             (this.setState({edit_table:false}))}
