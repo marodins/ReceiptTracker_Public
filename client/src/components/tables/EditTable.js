@@ -74,6 +74,7 @@ class EditTable extends React.Component{
                     this.props.setMessage('success')
                     this.props.operateModal()
                 })
+                this.props.updateData(this.props.data)
                 this.props.getAll()
             })
             .catch(err=>{
@@ -85,7 +86,7 @@ class EditTable extends React.Component{
 
     render(){
         var clicked_cell =this.state.key+this.state.clicked_id 
-        console.log(clicked_cell,'clicked cell')
+
         return(
             <Container>
                 <Dimmer active = {this.state.dimmer}>

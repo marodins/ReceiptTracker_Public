@@ -11,7 +11,6 @@ class LoadReceipts extends React.Component{
         this.handleDelete = this.handleDelete.bind(this)
         this.operateModal = this.operateModal.bind(this)
         this.handleEdit = this.handleEdit.bind(this)
-        console.log(this.props.data)
         this.state = {
             data:this.props.data,
             deleteLoading:false,
@@ -67,6 +66,12 @@ class LoadReceipts extends React.Component{
         
     }
 
+    updateData = (updatedData)=>{
+        this.setState(
+            {data : updatedData}
+        )
+    }
+
     handleEdit = () =>{
         this.setState({edit_table:true})
     }
@@ -94,6 +99,7 @@ class LoadReceipts extends React.Component{
                             operateModal = {()=>
                             (this.setState({edit_table:false}))}
                             getAll = {this.props.getAll}
+                            updatedData = {updateData}
                             />
                             
                     </Modal>
