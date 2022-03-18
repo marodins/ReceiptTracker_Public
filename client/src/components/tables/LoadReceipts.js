@@ -117,11 +117,11 @@ class LoadReceipts extends React.Component{
                                 </Table.Header>
 
                                 <Table.Body>
-                                    {Object.keys(this.state.data.items).map((key)=>{
+                                    {Object.keys(this.props.data.items).map((key)=>{
                                         return(
                                             <Table.Row id = "item" key = {key}>
-                                                <Table.Cell id = "item_name">{this.state.data.items[key].item_name}</Table.Cell>
-                                                <Table.Cell id = "price" >{this.state.data.items[key].item_price}</Table.Cell>
+                                                <Table.Cell id = "item_name">{this.props.data.items[key].item_name}</Table.Cell>
+                                                <Table.Cell id = "price" >{this.props.data.items[key].item_price}</Table.Cell>
                                             </Table.Row>
                                         )
                                     })}                                    
