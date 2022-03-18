@@ -69,13 +69,11 @@ class EditTable extends React.Component{
         })
         axios.put('/receipts/update',{store,date,items,receipt_id},{withCredentials:true})
             .then(res=>{
-                
                 this.setState({dimmer:false,loader:false},()=>{
                     this.props.setMessage('success')
                     this.props.operateModal()
                 })
-                this.props.setData(this.props.data)
-                this.props.getAll()
+                return this.props.getAll()
             })
             .catch(err=>{
                 return this.setState({dimmer:false,loader:false},()=>{

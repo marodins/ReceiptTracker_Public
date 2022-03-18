@@ -75,7 +75,7 @@ class LoadReceipts extends React.Component{
         return(
                 <div>
                     <ReceiptCard
-                        store = {store} 
+                        store = {store}
                         date = {date}
                         handleDelete = {this.handleDelete}
                         handleEdit = {this.handleEdit}
@@ -87,13 +87,12 @@ class LoadReceipts extends React.Component{
                             this.setState({edit_table:false})
                         }}
                         open = {this.state.edit_table}>
-                        <EditTable 
-                            data = {this.props.data} 
-                            setMessage = {this.props.setMessage} 
+                        <EditTable
+                            data = {this.props.data}
+                            setMessage = {this.props.setMessage}
                             operateModal = {()=>
                             (this.setState({edit_table:false}))}
                             getAll = {this.props.getAll}
-                            updatedData = {this.props.setData}
                             />
                             
                     </Modal>
