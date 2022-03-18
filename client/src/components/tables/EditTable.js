@@ -22,8 +22,6 @@ class EditTable extends React.Component{
         var id = e.target.closest('tr').id
         var name = e.target.id
 
-        console.log('in the click',id + name)
-
         this.setState({key:id,clicked_id:name})
     }
 
@@ -71,10 +69,12 @@ class EditTable extends React.Component{
         })
         axios.put('/receipts/update',{store,date,items,receipt_id},{withCredentials:true})
             .then(res=>{
-                return this.setState({dimmer:false,loader:false},()=>{
+                
+                this.setState({dimmer:false,loader:false},()=>{
                     this.props.setMessage('success')
                     this.props.operateModal()
                 })
+                this.props.getAll()
             })
             .catch(err=>{
                 return this.setState({dimmer:false,loader:false},()=>{

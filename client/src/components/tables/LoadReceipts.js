@@ -60,12 +60,10 @@ class LoadReceipts extends React.Component{
         },()=>{
             if(this.state.showModal === true){
                 if(this.props.modalOn === this.state.data.receipt_id){
-                    console.log('clearrrrrrrrring')
                     this.props.clearModal('')
                 }
             }
         })
-        
         
     }
 
@@ -94,7 +92,10 @@ class LoadReceipts extends React.Component{
                             data = {this.state.data} 
                             setMessage = {this.props.setMessage} 
                             operateModal = {()=>
-                            (this.setState({edit_table:false}))}/>
+                            (this.setState({edit_table:false}))}
+                            getAll = {this.props.getAll}
+                            />
+                            
                     </Modal>
 
                                      
