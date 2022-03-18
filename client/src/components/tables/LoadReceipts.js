@@ -99,7 +99,7 @@ class LoadReceipts extends React.Component{
                             operateModal = {()=>
                             (this.setState({edit_table:false}))}
                             getAll = {this.props.getAll}
-                            updatedData = {updateData}
+                            updatedData = {this.updateData}
                             />
                             
                     </Modal>
