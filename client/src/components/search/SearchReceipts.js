@@ -11,7 +11,6 @@ class SearchReceipts extends React.Component{
         this.handleSearchChange = this.handleSearchChange.bind(this)
         this.state={
             results:[],
-            value:'',
             loading:false
         }
     }
@@ -25,7 +24,7 @@ class SearchReceipts extends React.Component{
                     var fullResults = res.data.data.rows.map((ob)=>{
                         return {...ob,key:ob.price}
                     })
-                    this.setState({results:fullResults,value:theVal,loading:false})
+                    this.setState({results:fullResults,loading:false})
                 })
                 .catch(err=>{
                     console.log(err)
@@ -46,7 +45,6 @@ class SearchReceipts extends React.Component{
                 }}
                 onSearchChange = {this.handleSearchChange}
                 results = {this.state.results}
-                value = {this.state.value}
             />
         )
     }
