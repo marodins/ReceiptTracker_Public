@@ -18,20 +18,21 @@ class SearchReceipts extends React.Component{
 
     handleSearchChange = (e)=>{
         var theVal =  e.target.value
-        if(theVal.length === 0){
-            return this.setState({value:theVal,results:[]})
-        }
-        this.setState({loading:true})
-        axios.get('/receipts/search',{params:{value:theVal}},{withCredentials:true})
-            .then((res)=>{
-                var fullResults = res.data.data.rows.map((ob)=>{
-                    return {...ob,key:ob.price}
+        if(theVal.length > 0){
+            this.setState({loading:true})
+            axios.get('/receipts/search',{params:{value:theVal}},{withCredentials:true})
+                .then((res)=>{
+                    var fullResults = res.data.data.rows.map((ob)=>{
+                        return {...ob,key:ob.price}
+                    })
+                    this.setState({results:fullResults,value:theVal,loading:false})
                 })
-                this.setState({results:fullResults,value:theVal,loading:false})
-            })
-            .catch(err=>{
-                console.log(err)
-            })
+                .catch(err=>{
+                    console.log(err)
+                })
+
+        }
+
     }
 
 
