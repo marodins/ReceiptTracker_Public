@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+var router = express.Router({mergeParams:true});
 var {uploadReceipt, updateReceipt, deleteReceipt, specific_receipt} = require('../db/queries');
 var {check_query} = require('../methods/check_query');
 var check_token = require('../auth/check_token.js');

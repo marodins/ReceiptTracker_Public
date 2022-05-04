@@ -73,11 +73,11 @@ const uploadReceipt = (req,res,next)=>{
     //creating the receipt with some data {store,date,email} = object
     
     //all [['banana',12,'account1@yahoo.com'],[...]]
-    var email = req.params.uid
-    var receipt_data = [req.body.store,req.body.date,email]
+    var user_id = req.params.uid
+    var receipt_data = [req.body.store, req.body.date, user_id]
     const all_items = req.body.items
 
-    const insertStore = `INSERT INTO receipts(store,receipt_date,fk_user_receipt) VALUES($1,$2,$3) RETURNING receipt_id;`
+    const insertStore = `INSERT INTO receipts(store,receipt_date,fk_user_receipt) VALUES($1,$2,$3) RETURNING receipt_id`
 
     const insertItems = `INSERT INTO items(item_name,item_price,fk_item_receipt) VALUES($1, $2, $3)`
 
@@ -98,7 +98,6 @@ const uploadReceipt = (req,res,next)=>{
             // add all items belonging to that receipt
 
             for(var item of arr_items){
-                console.log('adding', item)
                 pool.query(insertItems,item,(err)=>{
                     if(err){
                         return next(err)

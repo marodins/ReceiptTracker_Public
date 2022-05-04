@@ -11,10 +11,10 @@ var change_check = (req,res,next)=>{
 
 }
 var query_check = (req, res, next)=>{
-    if("quantity" in req.params){
+    if("quantity" in req.query){
         return getReceipts(req, res, next)
     }
-    if("specific" in req.params){
+    if("specific" in req.query){
         return specific_receipt(req, res, next)
     }
     return searchReceipts(req, res, next)

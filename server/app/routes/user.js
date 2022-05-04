@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+var router = express.Router({mergeParams:true});
 var {registerUser, deleteAccount} = require('../db/queries.js')
 var {change_check} = require('../methods/check_which')
 var check_token = require('../auth/check_token');
