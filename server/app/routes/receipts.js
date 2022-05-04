@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var {getReceipts, uploadReceipt, updateReceipt, searchReceipts, deleteReceipt, specific_receipt} = require('../db/queries');
+var {uploadReceipt, updateReceipt, deleteReceipt, specific_receipt} = require('../db/queries');
 var {check_query} = require('../methods/check_query');
 var check_token = require('../auth/check_token.js');
 var {query_check} = require('../methods/check_which');

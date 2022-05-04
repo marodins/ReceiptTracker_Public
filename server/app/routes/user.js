@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var {registerUser} = require('../db/queries.js')
+var {registerUser, deleteAccount} = require('../db/queries.js')
 var {change_check} = require('../methods/check_which')
 var check_token = require('../auth/check_token');
 var {check_folder, fileUpload, processImage} = require('../methods/upload_route')
