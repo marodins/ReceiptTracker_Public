@@ -4,7 +4,6 @@ var express = require('express');
     log_out = require('./routes/log_out.js');
     users = require('./routes/user');
     receipts = require('./routes/receipts');
-    uploads = require('./routes/uploads');
 
 
 var app = express();
