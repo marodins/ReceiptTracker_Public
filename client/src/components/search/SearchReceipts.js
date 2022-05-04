@@ -18,9 +18,16 @@ class SearchReceipts extends React.Component{
 
     handleSearchChange = (e)=>{
         var theVal =  e.target.value
+        var params = {
+            params:{
+                search:true,
+                value:theVal
+            }
+        }
+
         if(theVal.length > 0){
             this.setState({loading:true})
-            axios.get(`/users/${this.user_id}/receipts`,{params:{value:theVal}},{withCredentials:true})
+            axios.get(`/users/${this.user_id}/receipts`,params,{withCredentials:true})
                 .then((res)=>{
                     var fullResults = res.data.data.rows.map((ob)=>{
                         return {...ob,key:ob.price}

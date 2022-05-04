@@ -1,4 +1,4 @@
-var {changePass,changeEmail, getReceipts, searchReceipts} = require('../db/queries')
+var {changePass,changeEmail, getReceipts, searchReceipts, specific_receipt} = require('../db/queries')
 
 var change_check = (req,res,next)=>{
     input = req.body
@@ -11,8 +11,11 @@ var change_check = (req,res,next)=>{
 
 }
 var query_check = (req, res, next)=>{
-    if(req.query.value === null){
+    if("quantity" in req.params){
         return getReceipts(req, res, next)
+    }
+    if("specific" in req.params){
+        return specific_receipt(req, res, next)
     }
     return searchReceipts(req, res, next)
 }

@@ -27,7 +27,7 @@ class RegisterForm extends React.Component{
     getSubmit=(e)=>{
         // submit user input to server for registration
         var dataSend = {email:this.state.email, password:this.state.password};
-        axios.post('/register',dataSend)
+        axios.post('/users',dataSend)
             .then((res)=>{
                 console.log(res);
                 if(res.data.message == "taken"){
