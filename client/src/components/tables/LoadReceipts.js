@@ -38,12 +38,13 @@ class LoadReceipts extends React.Component{
     handleDelete = (e) =>{
         
         var rid = this.state.data.receipt_id
+        console.log('rid', rid)
         this.setState({deleteLoading:true})
 
-        var header = {
-            withCredentials:true
+        var header = {headers:{
+            withCredentials:true}
         }
-        axios.delete(`/users/${this.user_id}/receipts/${rid}`,header)
+        axios.delete(`/users/${this.user_id}/receipts/${rid}`, header)
         .then(res=>{
             this.setState({deleteLoading:false})
             return this.props.getAll()
