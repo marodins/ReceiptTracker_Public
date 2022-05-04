@@ -8,7 +8,6 @@ const check_token = (req,res,next)=>{
     
     // if token exists
     if(token){
-        // decrypt using key
         jwt.verify(token,process.env.JWTSECRET,(err,decoded)=>{
             if(err){
                 return next(err);

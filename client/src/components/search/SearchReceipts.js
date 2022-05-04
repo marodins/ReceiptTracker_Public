@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import {Search} from 'semantic-ui-react'
-
+import current_user from '../../auth/login_auth'
 
 
 
@@ -13,13 +13,14 @@ class SearchReceipts extends React.Component{
             results:[],
             loading:false
         }
+        this.user_id = current_user.user_id
     }
 
     handleSearchChange = (e)=>{
         var theVal =  e.target.value
         if(theVal.length > 0){
             this.setState({loading:true})
-            axios.get('/receipts/search',{params:{value:theVal}},{withCredentials:true})
+            axios.get(`/users/${this.user_id}/receipts`,{params:{value:theVal}},{withCredentials:true})
                 .then((res)=>{
                     var fullResults = res.data.data.rows.map((ob)=>{
                         return {...ob,key:ob.price}

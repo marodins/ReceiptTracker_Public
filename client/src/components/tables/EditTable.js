@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import {Table,Button,Input, Container,Dimmer,Loader} from 'semantic-ui-react'
-
+import current_user from '../../auth/login_auth'
 
 
 
@@ -17,6 +17,7 @@ class EditTable extends React.Component{
             dimmer:false,
             loader:false
         }
+        this.user_id = current_user.user_id
     }
     cellClicked = (e)=>{
         var id = e.target.closest('tr').id
@@ -67,7 +68,7 @@ class EditTable extends React.Component{
             var all_items = this.state.items
             return [all_items[key].item_name,all_items[key].item_price,this.props.data.receipt_id]
         })
-        axios.put('/receipts/update',{store,date,items,receipt_id},{withCredentials:true})
+        axios.put(`/users/${this.user_id}/receipts/${receipt_id}`,{store,date,items,receipt_id},{withCredentials:true})
             .then(res=>{
                 this.setState({dimmer:false,loader:false},()=>{
                     this.props.setMessage('success')

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Form,Button} from 'semantic-ui-react'
 import {ConfirmEmailError, EmailExists} from '../messages/ErrorMessages'
-
+import current_user from '../../auth/login_auth'
 
 import axios from 'axios'
 
@@ -17,6 +17,7 @@ export default class EmailChangeForm extends React.Component{
             error:null,
             success:false
         }
+        this.user_id = current_user.user_id
     }
 
     handleSubmit=(e)=>{
@@ -26,9 +27,9 @@ export default class EmailChangeForm extends React.Component{
             return this.setState({error:'confirm'})
         }
         var data = {
-            new:this.state.new
+            email:this.state.new
         }
-        axios.post('/change/email',data,{withCredentials:true})
+        axios.patch(`/users/${this.user_id}`,data,{withCredentials:true})
             .then(res=>{
                 if(res.data.message==='email-in-use'){
                     return this.setState({error:'in-use'})

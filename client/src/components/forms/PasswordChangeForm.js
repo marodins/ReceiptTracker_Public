@@ -1,6 +1,7 @@
 import React from 'react'
 import {Form,Button} from 'semantic-ui-react'
 import {ConfirmPassError,OldPassError} from '../messages/ErrorMessages'
+import current_user from '../../auth/login_auth'
 
 
 import axios from 'axios'
@@ -16,6 +17,7 @@ export default class PasswordChangeForm extends React.Component{
             error:null,
             success:false
         }
+        this.user_id = current_user.user_id
     }
 
     handleSubmit=(e)=>{
@@ -24,10 +26,10 @@ export default class PasswordChangeForm extends React.Component{
             return this.setState({error:'confirm'})
         }
         var data = {
-            old:this.state.old,
-            new:this.state.new
+            old_password:this.state.old,
+            new_password:this.state.new
         }
-        axios.put('/change/password',data,{withCredentials:true})
+        axios.patch(`/users/${this.user_id}`,data,{withCredentials:true})
             .then(res=>{
                 if(res.data.message === 'password-no-match'){
                     return this.setState({error:'old'})

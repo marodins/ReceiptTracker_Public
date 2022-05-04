@@ -3,6 +3,7 @@ import {Table, Card,Button, Modal,Container} from 'semantic-ui-react'
 import ReceiptCard from './ReceiptCard'
 import axios from 'axios'
 import EditTable from './EditTable'
+import current_user from '../../auth/login_auth'
 
 
 class LoadReceipts extends React.Component{
@@ -17,6 +18,7 @@ class LoadReceipts extends React.Component{
             showModal:false,
             edit_table:false
         }
+        this.user_id = current_user.user_id
     }
 
     componentDidMount(){
@@ -42,7 +44,7 @@ class LoadReceipts extends React.Component{
         var header = {
             withCredentials:true
         }
-        axios.delete('/receipts/delete',id,header)
+        axios.delete(`/users/${this.user_id}/receipts/${id}`,header)
         .then(res=>{
             this.setState({deleteLoading:false})
             return this.props.getAll()

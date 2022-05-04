@@ -1,7 +1,7 @@
 import React from 'react'
 import {Table,Input,Button} from 'semantic-ui-react'
 import axios from 'axios'
-
+import current_user from '../../auth/login_auth'
 
 
 class LoadData extends React.Component{
@@ -20,6 +20,7 @@ class LoadData extends React.Component{
             },
             loading:false
         }
+        this.user_id = current_user.user_id
     }
     onChangeCell = (e) =>{
         //get id of clicked cell
@@ -51,7 +52,7 @@ class LoadData extends React.Component{
         var headers = {
             withCredentials:true
         }
-        axios.post('/submit_receipt',all_data,headers)
+        axios.post(`/users/${this.user_id}/receipts`,all_data,headers)
         .then(res=>{
 
             this.setState({loading:false},()=>{

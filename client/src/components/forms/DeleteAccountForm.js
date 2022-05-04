@@ -1,7 +1,7 @@
 import React from 'react'
 import {Form,Button} from 'semantic-ui-react'
 import {ConfirmEmailError} from '../messages/ErrorMessages'
-import Authenticate_user from '../../auth/login_auth'
+import current_user from '../../auth/login_auth'
 
 import axios from 'axios'
 import { withRouter } from 'react-router'
@@ -11,10 +11,11 @@ class DeleteAccountForm extends React.Component{
     constructor(props){
         super(props)
         this.state ={
-            user:Authenticate_user.getUser(),
+            user:current_user.getUser(),
             confirm:'',
             error:null
         }
+        this.user_id = current_user.user_id
     }
 
     handleSubmit=(e)=>{
@@ -26,9 +27,9 @@ class DeleteAccountForm extends React.Component{
         var data = {
             email:this.state.user
         }
-        axios.delete('/change/delete',data,{withCredentials:true})
+        axios.delete(`/users/${this.user_id}`,data,{withCredentials:true})
             .then(res=>{
-                Authenticate_user.logout(()=>{
+                current_user.logout(()=>{
                     this.props.history.push('/')
                 })
                 

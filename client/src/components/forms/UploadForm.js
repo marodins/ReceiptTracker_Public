@@ -4,6 +4,7 @@
 import React from 'react';
 import axios from 'axios';
 import {Button,Form, Header,Container, Segment, Icon} from 'semantic-ui-react'
+import current_user from '../../auth/login_auth'
 
 
 
@@ -22,6 +23,7 @@ class UploadForm extends React.Component{
             },
             fileName:null
         }
+        this.user_id = current_user.user_id
 
     }
     onChangeFile = (e)=>{
@@ -49,7 +51,7 @@ class UploadForm extends React.Component{
         this.onChangeLoader(true,null);
 
         // submit image file to server for processing
-        axios.post('/upload',formFile,headers)
+        axios.post(`/users/${this.user_id}/uploads`,formFile,headers)
 
             .then(res=>{
                 this.onChangeLoader(false,res.data.data)

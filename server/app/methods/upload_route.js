@@ -1,14 +1,12 @@
-//upload route
-var express = require('express');
-var router = express.Router();
+
 var multer = require('multer');
-var check_token = require('../auth/check_token');
 var Tesseract = require('tesseract.js');
 var path = require('path');
 var {Receipt} = require('../methods/analyze_receipt.js');
 var gm = require('gm').subClass({
     imageMagick:true
 });
+
 var fs = require('file-system');
 
 
@@ -58,9 +56,4 @@ var check_folder = (req, res, next)=>{
     next();
 }
 
-router.post('/',check_token,check_folder, fileUpload.single('avatar'),processImage,(req,res,next)=>{
-    return res.send({message:'upload complete',data:res.locals.data})
-})
-
-
- module.exports = router
+ module.exports = {check_folder, fileUpload, processImage}

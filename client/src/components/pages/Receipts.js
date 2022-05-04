@@ -6,7 +6,7 @@ import LoadReceipts from '../tables/LoadReceipts'
 import SearchReceipts from '../search/SearchReceipts'
 import { ReceiptUpdateSuccess } from '../messages/SuccessMessages'
 import {ReceiptUpdateUnsuccessful} from '../messages/ErrorMessages'
-
+import current_user from '../../auth/login_auth'
 import {Card,Segment} from 'semantic-ui-react'
 
 
@@ -25,6 +25,7 @@ class Receipts extends React.Component{
             selected:''
 
         }
+        this.user_id = current_user.user_id
     }
     //make axios request to get all past 50? receipts
     getAll = (specific) => {
@@ -39,7 +40,7 @@ class Receipts extends React.Component{
         }else{
             params = {params:{quantity:10}}
         }
-        axios.get('/receipts',params,headers)
+        axios.get(`/users/${this.user_id}/receipts`,params,headers)
             .then(res=>{
                 var {data} = res.data
                 console.log(data);

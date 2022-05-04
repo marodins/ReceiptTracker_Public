@@ -3,7 +3,7 @@ import axios from 'axios';
 import {withRouter} from 'react-router-dom';
 import {LoginError} from '../messages/ErrorMessages';
 import {Button, Form, Segment} from 'semantic-ui-react';
-import Authenticate_user from '../../auth/login_auth';
+import current_user from '../../auth/login_auth';
 
 
 
@@ -45,7 +45,7 @@ class LoginForm extends React.Component{
                 }
                 else{
                     // take user to upload page
-                    Authenticate_user.login(res.data.user,res.data.token,()=>{
+                    current_user.login(res.data.user,res.data.token,res.data.uid,()=>{
                         this.props.history.push('/upload')
                     });
                 }

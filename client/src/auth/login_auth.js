@@ -3,17 +3,19 @@
 
 import axios from 'axios';
 
-class Authenticate_user{
+class AuthenticateUser{
     constructor(){
         this.authenticated = false;
         this.user = null;
+        this.user_id = null;
         this.token = null;
     }
 
-    login(user,token,callback){
+    login(user,token,uid, callback){
         this.authenticated=true;
         this.token = token;
         this.user = user;
+        this.user_id = uid
 
         callback();
     }
@@ -45,4 +47,4 @@ class Authenticate_user{
     }
 }
 
-export default new Authenticate_user();
+export default new AuthenticateUser();

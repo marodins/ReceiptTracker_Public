@@ -6,7 +6,7 @@ var format = require('pg-format')
 
 
 const registerUser = (req,res,next)=>{
-    const add_user = 'INSERT INTO Users(email,password) VALUES ($1,$2)';
+    const add_user = 'INSERT INTO Users(email,password) VALUES ($1,$2) RETURNING user_id';
     const add_these = [req.body.email,req.body.password];
 
     const check_if_exists = 'SELECT email FROM Users WHERE email = $1'
@@ -30,15 +30,15 @@ const registerUser = (req,res,next)=>{
 };
 
 const loginUser = (req,res,next) =>{
-    const check_user = 'SELECT email, password from users WHERE email = $1';
+    const check_user = 'SELECT email, password, user_id from users WHERE email = $1';
     const email = req.body.email;
     const password = req.body.password;
     
     if(process.env.NODE_ENV === 'development'){
-        var token = jwt.sign({email},process.env.JWTSECRET,{
+        var token = jwt.sign({"uid":email},process.env.JWTSECRET,{
             expiresIn:30000000
         })
-        req.session.email = email;
+        //req.session.email = email;
         res.cookie('token',token,{httpOnly:true});
         return res.send({authentication:"user-authenticated", user:email,token:token})
     }
@@ -49,19 +49,19 @@ const loginUser = (req,res,next) =>{
         }
         if(result.rows.length > 0){
             if (result.rows[0].password === password){
-                var token = jwt.sign({email},process.env.JWTSECRET,{
+                user_id = result.rows[0].user_id
+                var token = jwt.sign({"uid":user_id},process.env.JWTSECRET,{
                     expiresIn:30000000
                 })
-                req.session.email = email;
                 res.cookie('token',token,{httpOnly:true});
-                return res.send({authentication:"user-authenticated", user:email,token:token})
+                return res.status(201).send({authentication:"user-authenticated", user:email,token:token, uid:user_id})
             }
             else{
-                return res.send({authentication:"mismatch"})
+                return res.status(404).send({authentication:"mismatch"})
             }
         }
         else{
-            return res.send({authentication:"no-match"})
+            return res.status(404).send({authentication:"no-match"})
         }
     });
 
@@ -71,13 +71,13 @@ const loginUser = (req,res,next) =>{
 
 const uploadReceipt = (req,res,next)=>{
     //creating the receipt with some data {store,date,email} = object
-    var receipt_data = [req.body.store,req.body.date,req.body.email]
+    
     //all [['banana',12,'account1@yahoo.com'],[...]]
-    var email = req.body.email
+    var email = req.params.uid
+    var receipt_data = [req.body.store,req.body.date,email]
     const all_items = req.body.items
-    console.log('receipt data:', receipt_data, email);
-    const insertStore = `INSERT INTO receipts(store,receipt_date,fk_user_receipt) VALUES($1,$2,
-        (SELECT user_id FROM users WHERE email = $3)) RETURNING receipt_id;`
+
+    const insertStore = `INSERT INTO receipts(store,receipt_date,fk_user_receipt) VALUES($1,$2,$3) RETURNING receipt_id;`
 
     const insertItems = `INSERT INTO items(item_name,item_price,fk_item_receipt) VALUES($1, $2, $3)`
 
@@ -114,14 +114,14 @@ const uploadReceipt = (req,res,next)=>{
 };
 
 const getReceipts = (req,res,next)=>{
-    var email = req.session.email
+    var email = req.params.uid
     var quantity = req.query.quantity
 
     // get receipts for specific user
     const getInfo =   `SELECT * FROM
                     (SELECT receipt_id as receipt_id_1
                     FROM receipts
-                    WHERE fk_user_receipt = (SELECT user_id from users WHERE email = $1)
+                    WHERE fk_user_receipt = $1
                     GROUP BY receipt_id ORDER BY receipt_id DESC LIMIT $2 )q1
                     LEFT JOIN
                     (SELECT store, receipt_date, item_name,item_price,item_id, receipt_id
@@ -143,13 +143,13 @@ const specific_receipt = (req,res,next)=>{
 
     //queries database for specific receipt -- invoked when search item clicked from front end
 
-    var specific_id = req.query.specific
-    var email = req.session.email
+    var specific_id = req.params.rid
+    var email = req.params.uid
 
     const getReceipt = `SELECT * FROM
                         (SELECT receipt_id as receipt_id_1
                         FROM receipts
-                        WHERE fk_user_receipt = (SELECT user_id from users WHERE email = $1)
+                        WHERE fk_user_receipt = $1
                         AND receipt_id = $2) q1
                         LEFT JOIN
                         (SELECT store, receipt_date, item_name,item_price,item_id, receipt_id
@@ -172,10 +172,10 @@ const specific_receipt = (req,res,next)=>{
 
 const deleteReceipt = (req,res,next) =>{
 
-    var receipt_id = req.query.receipt_id
+    var rid = req.params.rid
 
     const delete_receipt = `DELETE FROM receipts WHERE receipt_id = $1`
-    pool.query(delete_receipt, [receipt_id],(err,results)=>{
+    pool.query(delete_receipt, [rid],(err,results)=>{
         if(err){
             return next(err)
         }
@@ -185,14 +185,14 @@ const deleteReceipt = (req,res,next) =>{
 }
 
 const changePass = (req,res,next) =>{
-    var old = req.body.old
-    var new_pass = req.body.new
-    var email = req.session.email
+    var old = req.body.old_password
+    var new_pass = req.body.new_password
+    var uid = req.params.uid
 
-    const changePass = `SELECT password FROM users WHERE email = $1`
-    const updatePass = `UPDATE users SET password = $1 WHERE email = $2`
+    const changePass = `SELECT password FROM users WHERE user_id = $1`
+    const updatePass = `UPDATE users SET password = $1 WHERE user_id = $2`
 
-    pool.query(changePass,[email],(err,results)=>{
+    pool.query(changePass,[uid],(err,results)=>{
         if(err){
             console.log(err);
             return next(err)
@@ -202,7 +202,7 @@ const changePass = (req,res,next) =>{
             res.end()
         }
         else{
-            pool.query(updatePass,[new_pass,email],(err)=>{
+            pool.query(updatePass,[new_pass,uid],(err)=>{
                 if (err){
                     next(err)
                 }
@@ -214,10 +214,10 @@ const changePass = (req,res,next) =>{
     })
 }
 const changeEmail = (req,res,next) =>{
-    var newEmail = req.body.new
-
-    var oldEmail = req.session.email
-    const changeEmail = `UPDATE users SET email = $1 WHERE email = $2`
+    var newEmail = req.body.email
+    var oldEmail = req.params.uid
+    
+    const changeEmail = `UPDATE users SET email = $1 WHERE user_id = $2`
     const checkIf = `SELECT email FROM users WHERE email = $1`
     pool.query(checkIf,[newEmail],(err,results)=>{
         if (err){
@@ -240,10 +240,10 @@ const changeEmail = (req,res,next) =>{
 }
 
 const deleteAccount = (req,res,next) =>{
-    var email = req.session.email
-    const deleteAcc = `DELETE FROM users WHERE email = $1`
+    var uid = req.params.uid
+    const deleteAcc = `DELETE FROM users WHERE user_id = $1`
 
-    pool.query(deleteAcc,[email],(err,result)=>{
+    pool.query(deleteAcc,[uid],(err,result)=>{
         if(err){
             next(err)
         }
@@ -252,14 +252,14 @@ const deleteAccount = (req,res,next) =>{
 }
 const searchReceipts = (req,res,next)=>{
     var input = req.query.value
-    var email = req.session.email
+    var user_id = req.params.uid
 
     const search = `SELECT receipt_id AS price, store AS title, receipt_date AS description
                     FROM receipts
                     WHERE LOWER(receipts.store) LIKE $1 || '%'
-                    AND fk_user_receipt = (SELECT user_id FROM users WHERE email = $2)`
+                    AND fk_user_receipt = $2`
 
-    pool.query(search,[input, email],(err,results)=>{
+    pool.query(search,[input, user_id],(err,results)=>{
         if(err){
             return next(err)
         }
@@ -270,7 +270,7 @@ const searchReceipts = (req,res,next)=>{
 
 var updateReceipt = (req,res,next)=>{
     //get store name --req.body
-    var rid = req.body.receipt_id
+    var rid = req.params.rid
     var store = req.body.store
     var items = req.body.items
 
