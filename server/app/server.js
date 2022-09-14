@@ -1,3 +1,6 @@
+var path = require('path');
+require('dotenv').config({path:path.join(__dirname, '../.env')});
+
 var express = require('express');
     log_in = require('./routes/login_route.js');
     check_token = require('./auth/check_token.js');
@@ -9,13 +12,16 @@ var express = require('express');
 var app = express();
 
 var cors = require('cors');
-var path = require('path');
+
+
+
 
 const ppath = path.join(__dirname,'../../client','build');
 
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+const check_token = require('./auth/check_token.js');
 
 let port = process.env.PORT || 3131;
 

@@ -1,7 +1,4 @@
 var {Pool} = require('pg');
-require('dotenv').config()
-
-//gets all info from env variables
 
 var production = {
   connectionString: process.env.DATABASE_URL,
@@ -11,11 +8,11 @@ var production = {
 }
 
 var development = {
-  connectionString: process.env.DATABASE_URL,
+  connectionString: "postgresql://postgres:postgres@localhost:5432",
   ssl: false
 }
 
-var poolConfig = process.env.NODE_ENV === 'production'? production:development;
+var poolConfig = process.env.NODE_ENV === 'production'? production : development;
 var pool = new Pool(poolConfig);
 
 module.exports=pool

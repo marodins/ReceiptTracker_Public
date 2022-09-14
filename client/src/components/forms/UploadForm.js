@@ -10,32 +10,39 @@ import current_user from '../../auth/login_auth'
 
 class UploadForm extends React.Component{
     constructor(props){
-        super(props)
-        this.onChangeFile = this.onChangeFile.bind(this)
-        this.onSubmitFile = this.onSubmitFile.bind(this)
-        this.onChangeLoader = this.onChangeLoader.bind(this)
+        super(props);
+        this.onChangeFile = this.onChangeFile.bind(this);
+        this.onSubmitFile = this.onSubmitFile.bind(this);
+        this.onChangeLoader = this.onChangeLoader.bind(this);
+        this.onDataProcessed = this.onDataProcessed.bind(this);
+        this.checkProgress = this.checkProgress.bind(this);
         this.state = {
             fileChosen:null,
+            intervalId:null,
             loading:false,
+            job:{
+                id:null,
+                status:null
+            },
             cell:{
                 row:'',
                 name:''
             },
             fileName:null
         }
-        this.user_id = current_user.user_id
+        this.user_id = current_user.user_id;
 
     }
     onChangeFile = (e)=>{
         this.setState({fileChosen:e.target.files[0]})
     }
-    onChangeLoader = (bool,info)=>{
-        this.setState({loading:bool},()=>{
-            if(info){
-                this.props.handleData(info)
-            }
+    onChangeLoader = (bool)=>{
+        this.setState({loading:bool});
+    }
 
-        })
+    onDataProcessed = (data)=>{
+        clearInterval(this.state.intervalId);
+        return this.props.handleData(data);
     }
 
     onSubmitFile = (e)=>{
@@ -48,13 +55,14 @@ class UploadForm extends React.Component{
             Authorization:this.props.token,
             withCredentials:true
         }
-        this.onChangeLoader(true,null);
+        this.onChangeLoader(true);
 
         // submit image file to server for processing
         axios.post(`/users/${this.user_id}/uploads`,formFile,headers)
-
             .then(res=>{
-                this.onChangeLoader(false,res.data.data)
+                console.log('res from upload', res);
+                this.setState({job:{id:res.data.data.id}});
+                this.setState({intervalId:setInterval(this.checkProgress, 1500)});
             })
             .catch(error=>{
 
@@ -62,6 +70,32 @@ class UploadForm extends React.Component{
 
             });
 
+    }
+
+    checkProgress = ()=>{
+        const headers = {
+            Authorization:this.props.token,
+            withCredentials:true
+        }
+        axios.get(`/users/${this.user_id}/uploads/${this.state.job.id}`,headers)
+
+        .then(res=>{
+            console.log('checking progress', res.data);
+            if(res.data.jobState === 'completed'){
+                this.onChangeLoader(false);
+                this.onDataProcessed(res.data.data.data);
+            }else if(res.data.jobState === 'failed'){
+                clearInterval(this.state.intervalId);
+                this.props.handleCompletion('INCOMPLETE');
+                
+            }
+            
+        })
+        .catch(error=>{
+            clearInterval(this.state.intervalId);
+            return this.props.handleCompletion('INCOMPLETE')
+
+        });
     }
     selectFile = (e)=>{
         this.setState({fileName:''})
@@ -83,7 +117,13 @@ class UploadForm extends React.Component{
 
                             <Button onClick={this.selectFile}>Select File</Button>
 
-                            <input id = "fileUpload" onChange = {this.onChangeFile} type = "file" name = "receipt" hidden/>
+                            <input 
+                                id = "fileUpload" 
+                                onChange = {this.onChangeFile} 
+                                type = "file" 
+                                name = "receipt" 
+                                accept='.png, .jpg, .jpeg'
+                                hidden/>
                         </Form.Field>
 
                         <Button size='medium' color ="blue" type ="submit" onClick = {this.onSubmitFile}>Upload</Button>

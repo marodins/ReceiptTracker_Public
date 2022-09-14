@@ -2,17 +2,14 @@
 // Class Receipt used to create instance of the analyzed receipt
 
 class Receipt{
-    constructor(text,req,res){
+    constructor(text){
         this.fullReceipt = {
-            email: req.session.email,
             parsed:[],
             store:'',
             items:[],
             date:''
-        }
-        this.text = text
-        this.req = req
-        this.res = res
+        };
+        this.text = text;
     }
 
     setAll = async function(){

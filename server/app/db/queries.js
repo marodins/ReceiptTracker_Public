@@ -34,16 +34,7 @@ const loginUser = (req,res,next) =>{
     const email = req.body.email;
     const password = req.body.password;
     
-    if(process.env.NODE_ENV === 'development'){
-        var token = jwt.sign({"uid":email},process.env.JWTSECRET,{
-            expiresIn:30000000
-        })
-        //req.session.email = email;
-        res.cookie('token',token,{httpOnly:true});
-        return res.send({authentication:"user-authenticated", user:email,token:token})
-    }
     pool.query(check_user,[email],(err,result)=>{
-        console.log('sending', email)
         if (err){
             return res.send({authentication:"mismatch"})
         }
@@ -74,8 +65,10 @@ const uploadReceipt = (req,res,next)=>{
     
     //all [['banana',12,'account1@yahoo.com'],[...]]
     var user_id = req.params.uid
-    var receipt_data = [req.body.store, req.body.date, user_id]
-    const all_items = req.body.items
+    var store = req.body.store ? req.body.store : 'N/A Store';
+    var date = req.body.date ? req.body.date : '01/01/1999';
+    var receipt_data = [store, date, user_id];
+    const all_items = req.body.items;
 
     const insertStore = `INSERT INTO receipts(store,receipt_date,fk_user_receipt) VALUES($1,$2,$3) RETURNING receipt_id`
 
@@ -88,12 +81,12 @@ const uploadReceipt = (req,res,next)=>{
             next(err)
         }
         else{
-            var rid = results.rows[0].receipt_id
+            var rid = results.rows[0].receipt_id;
             var arr_items = Object.keys(all_items).map((key)=>{
 
-                var price = all_items[key].price ? parseFloat(all_items[key].price): 0.0
-                var item_name = all_items[key].item_name
-                return [item_name, price,rid]
+                var price = all_items[key].price ? parseFloat(all_items[key].price): 0.0;
+                var item_name = all_items[key].item_name;
+                return [item_name, price,rid];
             })
             // add all items belonging to that receipt
 
@@ -113,7 +106,7 @@ const uploadReceipt = (req,res,next)=>{
 };
 
 const getReceipts = (req,res,next)=>{
-    var email = req.params.uid
+    var uid = req.params.uid
     var quantity = req.query.quantity
 
     // get receipts for specific user
@@ -129,7 +122,7 @@ const getReceipts = (req,res,next)=>{
 
                     ON q1.receipt_id_1 = q2.receipt_id;`
 
-    pool.query(getInfo,[email,quantity],(err,results)=>{
+    pool.query(getInfo,[uid,quantity],(err,results)=>{
         if(err){
             return next(err)
         }
@@ -193,7 +186,6 @@ const changePass = (req,res,next) =>{
 
     pool.query(changePass,[uid],(err,results)=>{
         if(err){
-            console.log(err);
             return next(err)
         }
         if(results.rows[0].password !== old){

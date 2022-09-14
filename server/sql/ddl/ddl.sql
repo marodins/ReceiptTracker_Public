@@ -17,7 +17,6 @@ CREATE TABLE Items(
   item_id SERIAL PRIMARY KEY,
   item_name varchar(255) NOT NULL,
   item_price FLOAT,
-  receipt_id INT,
   fk_item_receipt int REFERENCES Receipts(receipt_id)
   ON DELETE CASCADE
 );
