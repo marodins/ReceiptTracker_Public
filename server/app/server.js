@@ -21,7 +21,7 @@ const ppath = path.join(__dirname,'../../client','build');
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-const check_token = require('./auth/check_token.js');
+
 
 let port = process.env.PORT || 3131;
 
